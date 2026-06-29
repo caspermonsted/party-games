@@ -5,6 +5,7 @@ import ModeSelect from './screens/ModeSelect.jsx'
 import CategorySelect from './screens/CategorySelect.jsx'
 import PlayerSetup from './screens/PlayerSetup.jsx'
 import WordReveal from './screens/WordReveal.jsx'
+import JoinOrCreate from './screens/JoinOrCreate.jsx'
 import { pickWord, pickImposter } from './data/words.js'
 
 const games = [
@@ -59,8 +60,19 @@ export default function App() {
         onBack={() => setScreen('lobby')}
         onSelect={(mode) => {
           setSelectedMode(mode)
-          setScreen('categoryselect')
+          if (mode === 'multi') setScreen('joinorcreate')
+          else setScreen('categoryselect')
         }}
+      />
+    )
+  }
+
+  if (screen === 'joinorcreate') {
+    return (
+      <JoinOrCreate
+        onBack={() => setScreen('modeselect')}
+        onCreate={() => setScreen('categoryselect')}
+        onJoin={() => alert('Join a party — kommer snart!')}
       />
     )
   }
