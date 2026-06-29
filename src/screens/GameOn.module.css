@@ -1,0 +1,130 @@
+.screen {
+  position: relative;
+  width: 390px;
+  min-height: 100vh;
+  background: linear-gradient(165deg, #7c3aed 0%, #6d28d9 40%, #4338ca 100%);
+  font-family: 'Fredoka', sans-serif;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.blobTop {
+  position: absolute;
+  top: -40px;
+  right: -30px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #22d3ee, transparent 70%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.blobBottom {
+  position: absolute;
+  bottom: 60px;
+  left: -60px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f472b6, transparent 70%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 0 28px;
+  text-align: center;
+  opacity: 0;
+  transform: scale(0.88) translateY(20px);
+  transition: opacity 400ms ease-out, transform 400ms ease-out;
+}
+
+.content.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.badge {
+  font-size: 72px;
+  animation: pulse 1.8s ease-in-out infinite;
+  margin-bottom: 8px;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.1); }
+}
+
+.gameOn {
+  font-size: 48px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-shadow: 0 0 40px rgba(34,211,238,0.5);
+}
+
+.findImposter {
+  font-size: 22px;
+  font-weight: 600;
+  color: #22d3ee;
+  letter-spacing: 0.02em;
+}
+
+.divider {
+  width: 60px;
+  height: 3px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 2px;
+  margin: 8px 0;
+}
+
+.starterLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e9d5ff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.starterName {
+  font-size: 42px;
+  font-weight: 700;
+  color: #fbbf24;
+  line-height: 1.1;
+  text-shadow: 0 4px 20px rgba(251,191,36,0.4);
+}
+
+.starterSub {
+  font-size: 15px;
+  font-weight: 400;
+  color: #c9b6e8;
+  max-width: 260px;
+  line-height: 1.4;
+}
+
+.skipBtn {
+  position: absolute;
+  bottom: 48px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 120ms;
+}
+
+.skipBtn:hover {
+  color: #fff;
+}

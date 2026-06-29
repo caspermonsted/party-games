@@ -9,6 +9,7 @@ import CategorySelect from './screens/CategorySelect.jsx'
 import PlayerSetup from './screens/PlayerSetup.jsx'
 import WordReveal from './screens/WordReveal.jsx'
 import MyWord from './screens/MyWord.jsx'
+import GameOn from './screens/GameOn.jsx'
 import { createParty, joinParty, startParty } from './api/party.js'
 import { pickWord, pickImposter } from './data/words.js'
 import { useLang } from './lang/LanguageContext.jsx'
@@ -213,6 +214,15 @@ export default function App() {
         playerName={nickname}
         word={gameWord}
         isImposter={myImposterIndex}
+        onDone={() => setScreen('gameon')}
+      />
+    )
+  }
+
+  if (screen === 'gameon') {
+    return (
+      <GameOn
+        players={players}
         onDone={() => setScreen('lobby')}
       />
     )
@@ -224,7 +234,7 @@ export default function App() {
         players={players}
         imposterIndex={imposterIndex}
         word={gameWord}
-        onDone={() => setScreen('lobby')}
+        onDone={() => setScreen('gameon')}
       />
     )
   }
