@@ -32,6 +32,10 @@ export default function CategorySelect({ onBack, onDone }) {
     setSelected(new Set(CATEGORY_KEYS.map(c => c.id)))
   }
 
+  function removeAll() {
+    setSelected(new Set())
+  }
+
   return (
     <div className={styles.screen}>
       <div className={styles.blobTop} />
@@ -53,7 +57,10 @@ export default function CategorySelect({ onBack, onDone }) {
             </button>
           ))}
         </div>
-        <button className={styles.allBtn} onClick={selectAll}>{t.selectAll}</button>
+        <div className={styles.allBtnRow}>
+          <button className={styles.allBtn} onClick={selectAll}>{t.selectAll}</button>
+          <button className={styles.removeAllBtn} onClick={removeAll}>{t.removeAll}</button>
+        </div>
         <button
           className={styles.startBtn}
           disabled={selected.size === 0}

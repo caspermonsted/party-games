@@ -10,6 +10,7 @@ import PlayerSetup from './screens/PlayerSetup.jsx'
 import WordReveal from './screens/WordReveal.jsx'
 import { createParty, joinParty, startParty } from './api/party.js'
 import { pickWord, pickImposter } from './data/words.js'
+import { useLang } from './lang/LanguageContext.jsx'
 
 const games = [
   {
@@ -42,6 +43,7 @@ export default function App() {
   const [imposterIndex, setImposterIndex] = useState(null)
 
   // Party state
+  const { lang } = useLang()
   const [partyCode, setPartyCode] = useState(null)
   const [isHost, setIsHost] = useState(false)
   const [joinError, setJoinError] = useState(null)
@@ -147,7 +149,7 @@ export default function App() {
         onDone={async (categories) => {
           setSelectedCategories(categories)
           if (selectedMode === 'multi') {
-            const word = pickWord(categories)
+            const word = pickWord(categories, lang)
             const party = await import('./api/party.js').then(m => m.getParty(partyCode))
             const playerNames = party.players.map(p => p.name)
             const imposter = pickImposter(playerNames)
@@ -170,7 +172,7 @@ export default function App() {
         hostName={nickname}
         onBack={() => setScreen('categoryselect')}
         onDone={(playerList) => {
-          const word = pickWord(selectedCategories)
+          const word = pickWord(selectedCategories, lang)
           const imposter = pickImposter(playerList)
           setPlayers(playerList)
           setGameWord(word)

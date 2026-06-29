@@ -129,8 +129,15 @@
   color: #22d3ee;
 }
 
-.allBtn {
+.allBtnRow {
+  display: flex;
+  gap: 10px;
   width: 100%;
+  margin-bottom: 14px;
+}
+
+.allBtn {
+  flex: 1;
   background: rgba(255,255,255,0.16);
   border: none;
   border-radius: 16px;
@@ -140,12 +147,29 @@
   font-weight: 600;
   color: #e9d5ff;
   cursor: pointer;
-  margin-bottom: 14px;
   transition: background 120ms ease-out;
 }
 
 .allBtn:hover {
   background: rgba(255,255,255,0.24);
+}
+
+.removeAllBtn {
+  flex: 1;
+  background: rgba(244,114,182,0.18);
+  border: none;
+  border-radius: 16px;
+  padding: 12px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #f9a8d4;
+  cursor: pointer;
+  transition: background 120ms ease-out;
+}
+
+.removeAllBtn:hover {
+  background: rgba(244,114,182,0.32);
 }
 
 .startBtn {

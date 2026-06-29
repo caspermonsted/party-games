@@ -31,6 +31,7 @@ export const translations = {
     pickCategories: 'Pick your categories',
     chooseSub: 'Choose at least one category',
     selectAll: 'Select all',
+    removeAll: 'Remove all',
     startGame: 'Start game 🎉',
 
     // Categories
@@ -103,6 +104,7 @@ export const translations = {
     pickCategories: 'Vælg dine kategorier',
     chooseSub: 'Vælg mindst én kategori',
     selectAll: 'Vælg alle',
+    removeAll: 'Fjern alle',
     startGame: 'Start spillet 🎉',
 
     // Categories
