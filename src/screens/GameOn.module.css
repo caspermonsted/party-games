@@ -112,19 +112,19 @@
   line-height: 1.4;
 }
 
-.skipBtn {
-  position: absolute;
-  bottom: 48px;
+.votingBtn {
+  width: 100%;
   font-family: 'Fredoka', sans-serif;
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
-  color: rgba(255,255,255,0.7);
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: color 120ms;
-}
-
-.skipBtn:hover {
   color: #fff;
+  background: linear-gradient(90deg, #7c3aed, #4338ca);
+  border: none;
+  border-radius: 18px;
+  padding: 17px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -6px rgba(124,58,237,0.6);
+  margin-top: 8px;
+  transition: transform 120ms;
 }
+.votingBtn:active { transform: scale(0.97); }

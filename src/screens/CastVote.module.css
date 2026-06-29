@@ -1,0 +1,106 @@
+.screen {
+  position: relative;
+  width: 390px;
+  min-height: 100vh;
+  background: linear-gradient(165deg, #7c3aed 0%, #6d28d9 40%, #4338ca 100%);
+  font-family: 'Fredoka', sans-serif;
+  overflow: hidden;
+}
+.blobTop {
+  position: absolute; top: -40px; right: -30px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: radial-gradient(circle, #22d3ee, transparent 70%);
+  opacity: 0.5; pointer-events: none;
+}
+.blobBottom {
+  position: absolute; bottom: 80px; left: -50px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: radial-gradient(circle, #f472b6, transparent 70%);
+  opacity: 0.35; pointer-events: none;
+}
+.content {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  min-height: 100vh; padding: 56px 22px 32px; gap: 16px;
+}
+
+/* Pass phase */
+.passBox { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; text-align: center; }
+.passEmoji { font-size: 60px; }
+.passLabel { font-size: 17px; font-weight: 500; color: #e9d5ff; }
+.passName { font-size: 38px; font-weight: 700; color: #fff; }
+.passSub { font-size: 13px; color: #c9b6e8; }
+.readyBtn {
+  width: 100%; font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 600;
+  color: #fff; background: linear-gradient(90deg, #7c3aed, #4338ca);
+  border: none; border-radius: 18px; padding: 16px; cursor: pointer;
+  box-shadow: 0 10px 22px -6px rgba(124,58,237,0.6);
+  transition: transform 120ms; margin-top: 8px;
+}
+.readyBtn:active { transform: scale(0.97); }
+
+/* Vote phase */
+.voteTitle { font-size: 30px; font-weight: 700; color: #fff; text-align: center; }
+.voteSub { font-size: 15px; color: #e9d5ff; text-align: center; }
+
+.playerGrid {
+  width: 100%; display: grid;
+  grid-template-columns: 1fr 1fr; gap: 12px;
+}
+
+.playerBtn {
+  position: relative;
+  background: rgba(255,255,255,0.14);
+  border: 2px solid transparent;
+  border-radius: 20px; padding: 18px 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer; font-family: 'Fredoka', sans-serif;
+  transition: background 120ms, border-color 120ms, transform 120ms;
+}
+.playerBtn:active { transform: scale(0.96); }
+.playerBtnSelected {
+  background: rgba(255,255,255,0.22) !important;
+  border-color: #22d3ee !important;
+}
+
+.playerInitial {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: linear-gradient(135deg, #fbbf24, #f472b6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; font-weight: 700; color: #fff;
+}
+.playerName { font-size: 16px; font-weight: 600; color: #fff; }
+.checkmark {
+  position: absolute; top: 8px; right: 10px;
+  font-size: 14px; font-weight: 700; color: #22d3ee;
+}
+
+.confirmBtn {
+  width: 100%; font-family: 'Fredoka', sans-serif;
+  font-size: 20px; font-weight: 600; color: #fff;
+  background: linear-gradient(90deg, #7c3aed, #4338ca);
+  border: none; border-radius: 18px; padding: 16px; cursor: pointer;
+  box-shadow: 0 10px 22px -6px rgba(124,58,237,0.6);
+  transition: transform 120ms, opacity 120ms;
+}
+.confirmBtn:disabled { opacity: 0.4; cursor: default; }
+.confirmBtn:not(:disabled):active { transform: scale(0.97); }
+
+.progress {
+  font-size: 13px; color: #c9b6e8; text-align: center;
+}
+
+/* Waiting */
+.waitingBox { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+.waitingDots { display: flex; gap: 6px; }
+.waitingDots span {
+  width: 10px; height: 10px; border-radius: 50%; background: #22d3ee;
+  animation: bounce 1.2s ease-in-out infinite;
+}
+.waitingDots span:nth-child(2) { animation-delay: 0.2s; }
+.waitingDots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+.waitingText { font-size: 17px; font-weight: 500; color: #e9d5ff; }

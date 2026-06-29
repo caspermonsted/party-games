@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './GameOn.module.css'
 
-export default function GameOn({ players, onDone }) {
+export default function GameOn({ players, onStartVoting }) {
   const { t } = useLang()
   const [starter] = useState(() => players[Math.floor(Math.random() * players.length)])
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const t1 = setTimeout(() => setVisible(true), 100)
-    const t2 = setTimeout(() => onDone(), 4500)
-    return () => { clearTimeout(t1); clearTimeout(t2) }
+    const timer = setTimeout(() => setVisible(true), 100)
+    return () => clearTimeout(timer)
   }, [])
 
   return (
@@ -25,8 +24,10 @@ export default function GameOn({ players, onDone }) {
         <div className={styles.starterLabel}>{t.startingPlayer}</div>
         <div className={styles.starterName}>{starter}</div>
         <div className={styles.starterSub}>{t.gameOnSub}</div>
+        <button className={styles.votingBtn} onClick={onStartVoting}>
+          {t.startVoting}
+        </button>
       </div>
-      <button className={styles.skipBtn} onClick={onDone}>{t.letsGoBtn}</button>
     </div>
   )
 }

@@ -1,0 +1,26 @@
+.screen { position: relative; width: 390px; min-height: 100vh; background: linear-gradient(165deg, #7c3aed 0%, #6d28d9 40%, #4338ca 100%); font-family: 'Fredoka', sans-serif; overflow: hidden; }
+.blobTop { position: absolute; top: -40px; right: -30px; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, #22d3ee, transparent 70%); opacity: 0.5; pointer-events: none; }
+.blobBottom { position: absolute; bottom: 80px; left: -50px; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #f472b6, transparent 70%); opacity: 0.35; pointer-events: none; }
+.content { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 48px 28px 40px; gap: 14px; text-align: center; }
+
+.badge { font-size: 64px; }
+.title { font-size: 28px; font-weight: 700; color: #fff; }
+.nameTag { background: rgba(255,255,255,0.15); border-radius: 16px; padding: 8px 24px; font-size: 22px; font-weight: 700; color: #fbbf24; }
+.sub { font-size: 15px; color: #e9d5ff; }
+
+.form { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+.input { width: 100%; font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 600; color: #1a0b2e; background: #fff; border: none; border-radius: 18px; padding: 16px 20px; text-align: center; outline: none; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.input::placeholder { color: #c4b5d4; font-weight: 400; }
+.guessBtn { width: 100%; font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 600; color: #fff; background: linear-gradient(90deg, #7c3aed, #4338ca); border: none; border-radius: 18px; padding: 16px; cursor: pointer; box-shadow: 0 10px 22px -6px rgba(124,58,237,0.6); transition: transform 120ms, opacity 120ms; }
+.guessBtn:disabled { opacity: 0.4; cursor: default; }
+.guessBtn:not(:disabled):active { transform: scale(0.97); }
+
+.resultBox { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.resultIcon { font-size: 72px; animation: pop 300ms ease-out; }
+@keyframes pop { from { transform: scale(0.3); } to { transform: scale(1); } }
+.resultText { font-size: 28px; font-weight: 700; color: #fff; }
+.wordReveal { font-size: 18px; color: #e9d5ff; }
+.wordReveal strong { color: #22d3ee; }
+.bonusNote { background: rgba(34,211,238,0.2); border: 1px solid rgba(34,211,238,0.4); border-radius: 14px; padding: 8px 20px; font-size: 15px; font-weight: 600; color: #22d3ee; }
+.continueBtn { width: 100%; font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 600; color: #fff; background: linear-gradient(90deg, #7c3aed, #4338ca); border: none; border-radius: 18px; padding: 16px; cursor: pointer; box-shadow: 0 10px 22px -6px rgba(124,58,237,0.6); margin-top: 4px; transition: transform 120ms; }
+.continueBtn:active { transform: scale(0.97); }

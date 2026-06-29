@@ -35,6 +35,19 @@ export async function startParty(code, word, imposterIndex, categories) {
   })
 }
 
+export async function submitVote(code, voterName, votedFor) {
+  const res = await fetch(`${BASE}/party/${code}/vote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ voterName, votedFor }),
+  })
+  return res.json()
+}
+
+export async function resetParty(code) {
+  await fetch(`${BASE}/party/${code}/reset`, { method: 'POST' })
+}
+
 export async function kickPlayer(code, playerName) {
   const res = await fetch(`${BASE}/party/${code}/kick`, {
     method: 'POST',

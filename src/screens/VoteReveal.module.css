@@ -1,0 +1,57 @@
+.screen {
+  position: relative; width: 390px; min-height: 100vh;
+  background: linear-gradient(165deg, #7c3aed 0%, #6d28d9 40%, #4338ca 100%);
+  font-family: 'Fredoka', sans-serif; overflow: hidden;
+}
+.blobTop { position: absolute; top: -40px; right: -30px; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, #22d3ee, transparent 70%); opacity: 0.5; pointer-events: none; }
+.blobBottom { position: absolute; bottom: 80px; left: -50px; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #f472b6, transparent 70%); opacity: 0.35; pointer-events: none; }
+
+.content {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  min-height: 100vh; padding: 56px 22px 40px; gap: 16px;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 350ms ease-out, transform 350ms ease-out;
+}
+.content.visible { opacity: 1; transform: translateY(0); }
+
+.resultBadge { font-size: 72px; animation: pop 400ms ease-out 200ms both; }
+@keyframes pop {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.resultTitle { font-size: 32px; font-weight: 700; color: #fff; text-align: center; }
+
+.imposterReveal {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: rgba(255,255,255,0.12); border-radius: 20px; padding: 14px 28px; width: 100%;
+}
+.imposterLabel { font-size: 13px; font-weight: 600; color: #e9d5ff; text-transform: uppercase; letter-spacing: 0.1em; }
+.imposterName { font-size: 34px; font-weight: 700; color: #fbbf24; }
+
+/* Vote list */
+.voteList { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+.voteRow {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.1); border-radius: 16px; padding: 10px 14px;
+}
+.voteRowImposter { background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.3); }
+.voteAvatar {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #fbbf24, #f472b6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: #fff;
+}
+.voteName { font-size: 16px; font-weight: 600; color: #fff; width: 80px; flex-shrink: 0; }
+.voteBar { flex: 1; height: 8px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; }
+.voteBarFill { height: 100%; background: linear-gradient(90deg, #22d3ee, #a855f7); border-radius: 4px; transition: width 600ms ease-out; }
+.voteCount { font-size: 14px; font-weight: 600; color: #e9d5ff; width: 40px; text-align: right; flex-shrink: 0; }
+
+.continueBtn {
+  width: 100%; font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 600;
+  color: #fff; background: linear-gradient(90deg, #7c3aed, #4338ca);
+  border: none; border-radius: 18px; padding: 16px; cursor: pointer;
+  box-shadow: 0 10px 22px -6px rgba(124,58,237,0.6);
+  transition: transform 120ms; margin-top: 4px;
+}
+.continueBtn:active { transform: scale(0.97); }

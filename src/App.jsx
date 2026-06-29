@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import NicknameScreen from './screens/NicknameScreen.jsx'
 import GameLobby from './screens/GameLobby.jsx'
 import ModeSelect from './screens/ModeSelect.jsx'
@@ -10,9 +10,60 @@ import PlayerSetup from './screens/PlayerSetup.jsx'
 import WordReveal from './screens/WordReveal.jsx'
 import MyWord from './screens/MyWord.jsx'
 import GameOn from './screens/GameOn.jsx'
-import { createParty, joinParty, startParty } from './api/party.js'
+import { CastVoteSamePhone, CastVoteMulti } from './screens/CastVote.jsx'
+import VoteReveal from './screens/VoteReveal.jsx'
+import ImposterGuess from './screens/ImposterGuess.jsx'
+import RoundResults from './screens/RoundResults.jsx'
+import Leaderboard from './screens/Leaderboard.jsx'
+import { createParty, joinParty, startParty, submitVote, getParty } from './api/party.js'
 import { pickWord, pickImposter } from './data/words.js'
+import { calculatePoints, getSavedScores, saveScores, clearScores } from './data/scoring.js'
 import { useLang } from './lang/LanguageContext.jsx'
+
+// Multi-phone voting wrapper — poller serveren til alle har stemt
+function CastVoteMultiWrapper({ playerName, players, partyCode, onAllVoted }) {
+  const [voted, setVoted] = useState(false)
+  const [waitingCount, setWaitingCount] = useState(0)
+
+  useEffect(() => {
+    if (!voted) return
+    const interval = setInterval(async () => {
+      const party = await getParty(partyCode)
+      if (!party) return
+      const voteCount = Object.keys(party.votes || {}).length
+      setWaitingCount(voteCount)
+      if (voteCount >= players.length) {
+        clearInterval(interval)
+        onAllVoted(party.votes)
+      }
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [voted])
+
+  if (voted) {
+    return (
+      <div style={{ position:'relative', width:'390px', minHeight:'100vh', background:'linear-gradient(165deg,#7c3aed,#6d28d9 40%,#4338ca)', fontFamily:"'Fredoka',sans-serif", display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:'16px', color:'#fff', textAlign:'center', padding:'40px' }}>
+        <div style={{ fontSize:'64px' }}>✅</div>
+        <div style={{ fontSize:'26px', fontWeight:700 }}>Vote submitted!</div>
+        <div style={{ fontSize:'16px', color:'#e9d5ff' }}>Waiting for others... ({waitingCount}/{players.length})</div>
+        <div style={{ display:'flex', gap:'6px', marginTop:'8px' }}>
+          {[0,1,2].map(i => <span key={i} style={{ width:'10px', height:'10px', borderRadius:'50%', background:'#22d3ee', display:'inline-block', animation:`bounce 1.2s ease-in-out ${i*0.2}s infinite` }} />)}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <CastVoteMulti
+      playerName={playerName}
+      players={players}
+      onVote={async (voter, voted) => {
+        await submitVote(partyCode, voter, voted)
+        setVoted(true)
+      }}
+    />
+  )
+}
 
 const games = [
   {
@@ -53,12 +104,31 @@ export default function App() {
 
   // Party state
   const { lang } = useLang()
+  // Scoring state
+  const [votes, setVotes] = useState({})
+  const [currentVoterIndex, setCurrentVoterIndex] = useState(0)
+  const [roundPoints, setRoundPoints] = useState({})
+  const [totalScores, setTotalScores] = useState({})
+  const [imposterCaughtState, setImposterCaughtState] = useState(false)
+
   const [partyCode, setPartyCode] = useState(null)
   const [isHost, setIsHost] = useState(false)
   const [joinError, setJoinError] = useState(null)
   const [joinLoading, setJoinLoading] = useState(false)
   const [prefilledCode] = useState(getJoinCodeFromUrl)
   const [myImposterIndex, setMyImposterIndex] = useState(null)
+
+  function finishRound(imposterGuessedCorrectly) {
+    const { points, imposterCaught } = calculatePoints(players, imposterIndex, votes, imposterGuessedCorrectly)
+    const saved = getSavedScores(players)
+    const newTotals = {}
+    players.forEach(p => { newTotals[p] = (saved[p] || 0) + (points[p] || 0) })
+    saveScores(newTotals)
+    setRoundPoints(points)
+    setTotalScores(newTotals)
+    setImposterCaughtState(imposterCaught)
+    setScreen('roundresults')
+  }
 
   function handleSetNickname(name) {
     saveNickname(name)
@@ -218,7 +288,103 @@ export default function App() {
     return (
       <GameOn
         players={players}
-        onDone={() => setScreen('lobby')}
+        onStartVoting={() => {
+          setVotes({})
+          setCurrentVoterIndex(0)
+          setScreen(selectedMode === 'multi' ? 'vote-multi' : 'vote-same')
+        }}
+      />
+    )
+  }
+
+  // Same phone voting — én ad gangen
+  if (screen === 'vote-same') {
+    return (
+      <CastVoteSamePhone
+        players={players}
+        currentVoterIndex={currentVoterIndex}
+        onVote={(voter, voted) => {
+          const newVotes = { ...votes, [voter]: voted }
+          setVotes(newVotes)
+          if (currentVoterIndex + 1 >= players.length) {
+            setScreen('votereveal')
+          } else {
+            setCurrentVoterIndex(i => i + 1)
+          }
+        }}
+      />
+    )
+  }
+
+  // Multi phone voting — polling indtil alle har stemt
+  if (screen === 'vote-multi') {
+    return (
+      <CastVoteMultiWrapper
+        playerName={nickname}
+        players={players}
+        partyCode={partyCode}
+        onAllVoted={(allVotes) => {
+          setVotes(allVotes)
+          setScreen('votereveal')
+        }}
+      />
+    )
+  }
+
+  if (screen === 'votereveal') {
+    return (
+      <VoteReveal
+        players={players}
+        votes={votes}
+        imposterIndex={imposterIndex}
+        word={gameWord}
+        onContinue={(caught) => {
+          setImposterCaughtState(caught)
+          if (caught) {
+            setScreen('imposterguess')
+          } else {
+            finishRound(false)
+          }
+        }}
+      />
+    )
+  }
+
+  if (screen === 'imposterguess') {
+    return (
+      <ImposterGuess
+        imposterName={players[imposterIndex]}
+        word={gameWord}
+        onResult={(guessedCorrectly) => finishRound(guessedCorrectly)}
+      />
+    )
+  }
+
+  if (screen === 'roundresults') {
+    return (
+      <RoundResults
+        roundPoints={roundPoints}
+        totalScores={totalScores}
+        imposterName={players[imposterIndex]}
+        imposterCaught={imposterCaughtState}
+        onContinue={() => setScreen('leaderboard')}
+      />
+    )
+  }
+
+  if (screen === 'leaderboard') {
+    return (
+      <Leaderboard
+        scores={totalScores}
+        onPlayAgain={() => {
+          // Ny runde med samme spillere
+          setScreen(selectedMode === 'multi' ? 'categoryselect' : 'categoryselect')
+        }}
+        onEndGame={() => {
+          clearScores()
+          setTotalScores({})
+          setScreen('lobby')
+        }}
       />
     )
   }

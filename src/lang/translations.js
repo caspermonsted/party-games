@@ -116,12 +116,50 @@ export const translations = {
     myBlendIn: "Blend in — don't get caught!",
     myReady: "I'm ready 👊",
 
+    // Voting
+    voteTitle: 'Who is the imposter?',
+    voteSub: 'Choose who you think is the imposter',
+    confirmVote: 'Lock in vote ✓',
+    votingProgress: (current, total) => `Player ${current} of ${total} voting`,
+    waitingVotes: 'Waiting for all votes...',
+
+    // Vote reveal
+    imposterCaught: 'Imposter caught! 🎯',
+    imposterEscaped: 'Imposter escaped! 🕵️',
+    theImposterWas: 'The imposter was',
+    votes: 'votes',
+    letImposterGuess: 'Let the imposter guess →',
+    seeResults: 'See results →',
+
+    // Imposter guess
+    imposterGuessTitle: 'Last chance!',
+    imposterGuessSub: 'What do you think the word was?',
+    imposterGuessPlaceholder: 'Type your guess...',
+    imposterGuessBtn: 'That\'s my guess!',
+    imposterCorrect: 'Correct! +1 bonus point',
+    imposterWrong: 'Wrong!',
+    theWordWas: 'The word was',
+    imposterBonusPoint: '+1 bonus point earned!',
+
+    // Round results
+    roundResults: 'Round results',
+    pts: 'pts',
+    ptsTotal: 'total',
+    seeLeaderboard: 'See leaderboard →',
+
+    // Leaderboard
+    leaderboard: 'Leaderboard',
+    leadingSub: (name) => `${name} is in the lead!`,
+    playAgain: 'Play again',
+    endGame: 'End game & go to lobby',
+
     // Game on
     gameOn: 'GAME IS ON',
     findImposter: 'Find the imposter',
     startingPlayer: 'Starting player',
     gameOnSub: "Talk about the word — without saying it!",
     letsGoBtn: 'Let\'s go →',
+    startVoting: 'Start voting 🗳️',
   },
 
   da: {
@@ -241,11 +279,49 @@ export const translations = {
     myBlendIn: 'Blend ind — bliv ikke afsløret!',
     myReady: 'Jeg er klar 👊',
 
+    // Voting
+    voteTitle: 'Hvem er imposteren?',
+    voteSub: 'Vælg hvem du tror er imposteren',
+    confirmVote: 'Aflever stemme ✓',
+    votingProgress: (current, total) => `Spiller ${current} af ${total} stemmer`,
+    waitingVotes: 'Venter på alle stemmer...',
+
+    // Vote reveal
+    imposterCaught: 'Imposteren er fanget! 🎯',
+    imposterEscaped: 'Imposteren slap væk! 🕵️',
+    theImposterWas: 'Imposteren var',
+    votes: 'stemmer',
+    letImposterGuess: 'Lad imposteren gætte →',
+    seeResults: 'Se resultater →',
+
+    // Imposter guess
+    imposterGuessTitle: 'Sidste chance!',
+    imposterGuessSub: 'Hvad tror du ordet var?',
+    imposterGuessPlaceholder: 'Skriv dit gæt...',
+    imposterGuessBtn: 'Det er mit gæt!',
+    imposterCorrect: 'Rigtigt! +1 bonuspoint',
+    imposterWrong: 'Forkert!',
+    theWordWas: 'Ordet var',
+    imposterBonusPoint: '+1 bonuspoint optjent!',
+
+    // Round results
+    roundResults: 'Runderesultater',
+    pts: 'pt',
+    ptsTotal: 'i alt',
+    seeLeaderboard: 'Se leaderboard →',
+
+    // Leaderboard
+    leaderboard: 'Leaderboard',
+    leadingSub: (name) => `${name} er i front!`,
+    playAgain: 'Spil igen',
+    endGame: 'Afslut spil & gå til lobby',
+
     // Game on
     gameOn: 'SPILLET ER I GANG',
     findImposter: 'Find imposteren',
     startingPlayer: 'Starter spiller',
     gameOnSub: 'Tal om ordet — uden at sige det!',
     letsGoBtn: 'Afsted →',
+    startVoting: 'Start afstemning 🗳️',
   },
 }

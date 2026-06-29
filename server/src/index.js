@@ -67,7 +67,29 @@ app.get('/api/party/:code', (req, res) => {
     word: party.word,
     imposterIndex: party.imposterIndex,
     categories: party.categories,
+    votes: party.votes || {},
   })
+})
+
+// Submit vote
+app.post('/api/party/:code/vote', (req, res) => {
+  const party = parties.get(req.params.code.toUpperCase())
+  if (!party) return res.status(404).json({ error: 'Party not found' })
+  const { voterName, votedFor } = req.body
+  if (!party.votes) party.votes = {}
+  party.votes[voterName] = votedFor
+  res.json({ votes: party.votes, totalPlayers: party.players.length })
+})
+
+// Reset votes for new round
+app.post('/api/party/:code/reset', (req, res) => {
+  const party = parties.get(req.params.code.toUpperCase())
+  if (!party) return res.status(404).json({ error: 'Party not found' })
+  party.votes = {}
+  party.status = 'waiting'
+  party.word = null
+  party.imposterIndex = null
+  res.json({ ok: true })
 })
 
 // Join party
