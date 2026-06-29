@@ -127,12 +127,7 @@ export default function App() {
             setIsHost(false)
             setScreen('waitingroom')
           } catch (e) {
-            setJoinError(
-              e.message === 'Party not found' ? 'No party found with that code 🤔'
-              : e.message === 'Game already started' ? 'That game has already started!'
-              : e.message === 'Name already taken' ? 'That name is already taken in this party!'
-              : 'Something went wrong. Try again.'
-            )
+            setJoinError(e.message)
           } finally {
             setJoinLoading(false)
           }
