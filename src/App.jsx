@@ -32,6 +32,13 @@ function saveNickname(name) {
   try { localStorage.setItem('pg_nickname', name) } catch {}
 }
 
+function getJoinCodeFromUrl() {
+  try {
+    const code = new URLSearchParams(window.location.search).get('join')
+    return code ? code.toUpperCase() : null
+  } catch { return null }
+}
+
 export default function App() {
   const [nickname, setNickname] = useState(getSavedNickname)
   const [screen, setScreen] = useState('lobby')
@@ -48,13 +55,23 @@ export default function App() {
   const [isHost, setIsHost] = useState(false)
   const [joinError, setJoinError] = useState(null)
   const [joinLoading, setJoinLoading] = useState(false)
+  const [prefilledCode] = useState(getJoinCodeFromUrl)
 
   function handleSetNickname(name) {
     saveNickname(name)
     setNickname(name)
   }
 
-  if (!nickname) return <NicknameScreen onDone={handleSetNickname} />
+  if (!nickname) return <NicknameScreen onDone={(name) => {
+    handleSetNickname(name)
+    // Hvis de kom via QR-kode, send dem direkte til join
+    if (prefilledCode) setScreen('joinparty')
+  }} />
+
+  // Hvis de kom via QR-kode og ikke har valgt join endnu
+  if (prefilledCode && screen === 'lobby') {
+    setScreen('joinparty')
+  }
 
   const user = { name: nickname, initial: nickname[0].toUpperCase() }
 
@@ -94,9 +111,10 @@ export default function App() {
   if (screen === 'joinparty') {
     return (
       <JoinParty
-        onBack={() => setScreen('joinorcreate')}
+        onBack={() => prefilledCode ? setScreen('lobby') : setScreen('joinorcreate')}
         error={joinError}
         loading={joinLoading}
+        initialCode={prefilledCode || ''}
         onSubmit={async (code) => {
           setJoinError(null)
           setJoinLoading(true)

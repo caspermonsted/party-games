@@ -2,9 +2,18 @@ import { useState, useEffect, useRef } from 'react'
 import { getParty, kickPlayer } from '../api/party.js'
 import styles from './WaitingRoom.module.css'
 
+function getJoinUrl(code) {
+  return `${window.location.origin}?join=${code}`
+}
+
+function getQrUrl(code) {
+  const joinUrl = encodeURIComponent(getJoinUrl(code))
+  return `https://api.qrserver.com/v1/create-qr-code/?size=180x180&color=1a0b2e&bgcolor=ffffff&data=${joinUrl}&margin=10`
+}
+
 export default function WaitingRoom({ playerName, code, isHost, onGameStart, onBack }) {
   const [players, setPlayers] = useState([])
-  const [status, setStatus] = useState('waiting')
+  const [showQr, setShowQr] = useState(false)
   const pollRef = useRef(null)
 
   useEffect(() => {
@@ -12,7 +21,6 @@ export default function WaitingRoom({ playerName, code, isHost, onGameStart, onB
       const party = await getParty(code)
       if (!party) return
       setPlayers(party.players)
-      setStatus(party.status)
       if (party.status === 'playing') {
         clearInterval(pollRef.current)
         onGameStart({
@@ -41,11 +49,43 @@ export default function WaitingRoom({ playerName, code, isHost, onGameStart, onB
       <div className={styles.blobBottom} />
 
       <div className={styles.content}>
-        {/* Party code */}
-        <div className={styles.codeBox}>
-          <div className={styles.codeLabel}>Party code</div>
-          <div className={styles.codeValue}>{code}</div>
-          <div className={styles.codeSub}>Share this with your friends</div>
+
+        {/* Join methods */}
+        <div className={styles.joinBox}>
+          {/* Toggle tabs */}
+          <div className={styles.tabs}>
+            <button
+              className={`${styles.tab} ${!showQr ? styles.tabActive : ''}`}
+              onClick={() => setShowQr(false)}
+            >
+              📋 PIN code
+            </button>
+            <button
+              className={`${styles.tab} ${showQr ? styles.tabActive : ''}`}
+              onClick={() => setShowQr(true)}
+            >
+              📷 QR code
+            </button>
+          </div>
+
+          {!showQr ? (
+            /* PIN code view */
+            <div className={styles.pinView}>
+              <div className={styles.codeLabel}>Party code</div>
+              <div className={styles.codeValue}>{code}</div>
+              <div className={styles.codeSub}>Go to the app and enter this code</div>
+            </div>
+          ) : (
+            /* QR code view */
+            <div className={styles.qrView}>
+              <img
+                className={styles.qrImg}
+                src={getQrUrl(code)}
+                alt={`Join code: ${code}`}
+              />
+              <div className={styles.codeSub}>Scan to join instantly</div>
+            </div>
+          )}
         </div>
 
         {/* Player list */}

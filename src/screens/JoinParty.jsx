@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import styles from './JoinParty.module.css'
 
-export default function JoinParty({ onBack, onSubmit, error, loading }) {
-  const [code, setCode] = useState('')
+export default function JoinParty({ onBack, onSubmit, error, loading, initialCode = '' }) {
+  const [code, setCode] = useState(initialCode)
 
   function handleInput(e) {
     const val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4)

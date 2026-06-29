@@ -41,13 +41,41 @@
   gap: 24px;
 }
 
-/* Code box */
-.codeBox {
+/* Join box */
+.joinBox {
   width: 100%;
   background: rgba(255,255,255,0.15);
   border: 2px solid rgba(255,255,255,0.3);
   border-radius: 28px;
-  padding: 24px;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 12px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #c9b6e8;
+  cursor: pointer;
+  transition: background 120ms, color 120ms;
+}
+
+.tabActive {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+/* PIN view */
+.pinView {
+  padding: 20px;
   text-align: center;
 }
 
@@ -72,6 +100,22 @@
   font-size: 13px;
   color: #c9b6e8;
   margin-top: 8px;
+}
+
+/* QR view */
+.qrView {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.qrImg {
+  width: 160px;
+  height: 160px;
+  border-radius: 16px;
+  background: #fff;
 }
 
 /* Players */
