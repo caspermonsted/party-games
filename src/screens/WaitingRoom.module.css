@@ -1,0 +1,238 @@
+.screen {
+  position: relative;
+  width: 390px;
+  min-height: 100vh;
+  background: linear-gradient(165deg, #7c3aed 0%, #6d28d9 40%, #4338ca 100%);
+  font-family: 'Fredoka', sans-serif;
+  overflow: hidden;
+}
+
+.blobTop {
+  position: absolute;
+  top: -40px;
+  right: -30px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #22d3ee, transparent 70%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.blobBottom {
+  position: absolute;
+  bottom: 80px;
+  left: -50px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f472b6, transparent 70%);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 48px 22px 40px;
+  gap: 24px;
+}
+
+/* Code box */
+.codeBox {
+  width: 100%;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 28px;
+  padding: 24px;
+  text-align: center;
+}
+
+.codeLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e9d5ff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.codeValue {
+  font-size: 52px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.15em;
+  line-height: 1;
+}
+
+.codeSub {
+  font-size: 13px;
+  color: #c9b6e8;
+  margin-top: 8px;
+}
+
+/* Players */
+.playerSection {
+  width: 100%;
+}
+
+.playerHeader {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e9d5ff;
+  margin-bottom: 12px;
+}
+
+.playerList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.playerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 12px 16px;
+}
+
+.playerAvatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fbbf24, #f472b6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.playerName {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hostBadge {
+  font-size: 11px;
+  font-weight: 600;
+  background: #22d3ee;
+  color: #1a0b2e;
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+
+.youBadge {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  color: #e9d5ff;
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+
+.kickBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(244,114,182,0.25);
+  border: none;
+  color: #f472b6;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 120ms;
+}
+
+.kickBtn:hover {
+  background: rgba(244,114,182,0.5);
+}
+
+/* Start / waiting */
+.startBtn {
+  width: 100%;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, #7c3aed, #4338ca);
+  border: none;
+  border-radius: 18px;
+  padding: 17px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -6px rgba(124,58,237,0.6);
+  transition: transform 120ms, opacity 120ms;
+  margin-top: auto;
+}
+
+.startBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.startBtn:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.waitingMsg {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #e9d5ff;
+}
+
+.waitingDots {
+  display: flex;
+  gap: 6px;
+}
+
+.waitingDots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22d3ee;
+  animation: bounce 1.2s ease-in-out infinite;
+}
+
+.waitingDots span:nth-child(2) { animation-delay: 0.2s; }
+.waitingDots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* Kicked screen */
+.emoji { font-size: 64px; }
+.title { font-size: 28px; font-weight: 700; color: #fff; margin-top: 16px; }
+.sub { font-size: 15px; color: #e9d5ff; margin-top: 8px; }
+.backBtn {
+  margin-top: 32px;
+  background: rgba(255,255,255,0.16);
+  border: none;
+  border-radius: 16px;
+  padding: 12px 24px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+}
