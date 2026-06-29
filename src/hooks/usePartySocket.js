@@ -1,6 +1,8 @@
 import { useEffect, useRef, useCallback } from 'react'
 
 function getWsUrl() {
+  // I production bruger vi samme host som siden
+  // I development proxy vi via Vite til Express på port 3000
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
   return `${protocol}//${window.location.host}`
 }
@@ -14,6 +16,10 @@ export function usePartySocket(onMessage) {
     const ws = new WebSocket(getWsUrl())
     wsRef.current = ws
 
+    ws.onopen = () => console.log('[WS] Connected')
+    ws.onclose = () => console.log('[WS] Disconnected')
+    ws.onerror = (e) => console.error('[WS] Error', e)
+
     ws.onmessage = (e) => {
       try {
         const msg = JSON.parse(e.data)
@@ -26,9 +32,11 @@ export function usePartySocket(onMessage) {
 
   const send = useCallback((msg) => {
     const ws = wsRef.current
-    if (ws && ws.readyState === WebSocket.OPEN) {
+    if (!ws) return
+    if (ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify(msg))
-    } else if (ws) {
+    } else {
+      // Vent til forbindelsen er klar
       ws.addEventListener('open', () => ws.send(JSON.stringify(msg)), { once: true })
     }
   }, [])
