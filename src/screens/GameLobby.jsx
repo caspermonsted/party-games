@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import styles from './GameLobby.module.css'
 
-export default function GameLobby({ user, games, onPlay }) {
+export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
   const [activeTab, setActiveTab] = useState('home')
+  const [showRename, setShowRename] = useState(false)
   const availableGames = games.filter(g => g.status === 'available')
   const readyCount = availableGames.length
 
   return (
     <div className={styles.screen}>
-      {/* Decorative blobs */}
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
 
@@ -19,7 +19,10 @@ export default function GameLobby({ user, games, onPlay }) {
             <div className={styles.greeting}>Hey {user.name}</div>
             <div className={styles.headline}>Let's play!</div>
           </div>
-          <div className={styles.avatar}>{user.initial}</div>
+          <button className={styles.avatar} onClick={() => setShowRename(true)} title="Skift navn">
+            {user.initial}
+            <span className={styles.avatarEdit}>✏️</span>
+          </button>
         </div>
 
         {/* Section label */}
@@ -49,35 +52,56 @@ export default function GameLobby({ user, games, onPlay }) {
 
         {/* Bottom nav */}
         <nav className={styles.bottomNav}>
-          <button
-            className={`${styles.navItem} ${activeTab === 'home' ? styles.navActive : ''}`}
-            onClick={() => setActiveTab('home')}
-            aria-label="Home"
-          >
-            ◉
-          </button>
-          <button
-            className={`${styles.navItem} ${activeTab === 'leaderboard' ? styles.navActive : ''}`}
-            onClick={() => setActiveTab('leaderboard')}
-            aria-label="Leaderboard"
-          >
-            ★
-          </button>
-          <button
-            className={`${styles.navItem} ${activeTab === 'play' ? styles.navActive : ''}`}
-            onClick={() => setActiveTab('play')}
-            aria-label="Play"
-          >
-            ▲
-          </button>
-          <button
-            className={`${styles.navItem} ${activeTab === 'profile' ? styles.navActive : ''}`}
-            onClick={() => setActiveTab('profile')}
-            aria-label="Profile"
-          >
-            ◐
-          </button>
+          <button className={`${styles.navItem} ${activeTab === 'home' ? styles.navActive : ''}`} onClick={() => setActiveTab('home')}>◉</button>
+          <button className={`${styles.navItem} ${activeTab === 'leaderboard' ? styles.navActive : ''}`} onClick={() => setActiveTab('leaderboard')}>★</button>
+          <button className={`${styles.navItem} ${activeTab === 'play' ? styles.navActive : ''}`} onClick={() => setActiveTab('play')}>▲</button>
+          <button className={`${styles.navItem} ${activeTab === 'profile' ? styles.navActive : ''}`} onClick={() => setActiveTab('profile')}>◐</button>
         </nav>
+      </div>
+
+      {/* Rename modal */}
+      {showRename && (
+        <RenameModal
+          current={user.name}
+          onSave={(name) => { onChangeNickname(name); setShowRename(false) }}
+          onClose={() => setShowRename(false)}
+        />
+      )}
+    </div>
+  )
+}
+
+function RenameModal({ current, onSave, onClose }) {
+  const [value, setValue] = useState(current)
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    const trimmed = value.trim()
+    if (!trimmed) return
+    onSave(trimmed)
+  }
+
+  return (
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modal} onClick={e => e.stopPropagation()}>
+        <div className={styles.modalTitle}>Skift nickname</div>
+        <form onSubmit={handleSubmit}>
+          <input
+            className={styles.modalInput}
+            value={value}
+            onChange={e => setValue(e.target.value)}
+            maxLength={20}
+            autoFocus
+          />
+          <button
+            className={styles.modalBtn}
+            type="submit"
+            disabled={!value.trim()}
+          >
+            Gem
+          </button>
+        </form>
+        <button className={styles.modalCancel} onClick={onClose}>Annuller</button>
       </div>
     </div>
   )

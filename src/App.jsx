@@ -17,14 +17,27 @@ const games = [
   },
 ]
 
+function getSavedNickname() {
+  try { return localStorage.getItem('pg_nickname') || null } catch { return null }
+}
+
+function saveNickname(name) {
+  try { localStorage.setItem('pg_nickname', name) } catch {}
+}
+
 export default function App() {
-  const [nickname, setNickname] = useState(null)
+  const [nickname, setNickname] = useState(getSavedNickname)
   const [screen, setScreen] = useState('lobby')
   const [selectedGame, setSelectedGame] = useState(null)
   const [selectedMode, setSelectedMode] = useState(null)
 
+  function handleSetNickname(name) {
+    saveNickname(name)
+    setNickname(name)
+  }
+
   if (!nickname) {
-    return <NicknameScreen onDone={setNickname} />
+    return <NicknameScreen onDone={handleSetNickname} />
   }
 
   const user = {
@@ -50,7 +63,6 @@ export default function App() {
       <CategorySelect
         onBack={() => setScreen('modeselect')}
         onDone={(categories) => {
-          // TODO: start selve spillet med mode + categories
           alert(`Klar! Mode: ${selectedMode} — Kategorier: ${categories.join(', ')}`)
         }}
       />
@@ -65,6 +77,7 @@ export default function App() {
         setSelectedGame(game)
         setScreen('modeselect')
       }}
+      onChangeNickname={handleSetNickname}
     />
   )
 }
