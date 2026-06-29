@@ -1,0 +1,151 @@
+.screen {
+  position: relative;
+  width: 390px;
+  min-height: 100vh;
+  background: linear-gradient(165deg, #7c3aed 0%, #6d28d9 40%, #4338ca 100%);
+  font-family: 'Fredoka', sans-serif;
+  overflow: hidden;
+}
+
+.blobTop {
+  position: absolute;
+  top: -40px;
+  right: -30px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #22d3ee, transparent 70%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.blobBottom {
+  position: absolute;
+  bottom: 80px;
+  left: -50px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f472b6, transparent 70%);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 48px 28px 40px;
+  text-align: center;
+  gap: 16px;
+}
+
+.nameTag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 8px 18px 8px 8px;
+  margin-bottom: 8px;
+}
+
+.nameInitial {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fbbf24, #f472b6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.nameText {
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Normal player */
+.wordIcon {
+  font-size: 60px;
+}
+
+.wordLabel {
+  font-size: 16px;
+  font-weight: 500;
+  color: #e9d5ff;
+}
+
+.wordValue {
+  font-size: 52px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+
+/* Imposter */
+.imposterIcon {
+  font-size: 70px;
+}
+
+.imposterTitle {
+  font-size: 38px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.15;
+  white-space: pre-line;
+}
+
+.hintBox {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  padding: 14px 28px;
+}
+
+.hintLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e9d5ff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.hintWord {
+  font-size: 32px;
+  font-weight: 700;
+  color: #22d3ee;
+}
+
+.sub {
+  font-size: 14px;
+  color: #c9b6e8;
+}
+
+.readyBtn {
+  width: 100%;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, #7c3aed, #4338ca);
+  border: none;
+  border-radius: 18px;
+  padding: 17px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -6px rgba(124,58,237,0.6);
+  margin-top: 12px;
+  transition: transform 120ms ease-out;
+}
+
+.readyBtn:active {
+  transform: scale(0.97);
+}

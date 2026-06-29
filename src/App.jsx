@@ -8,6 +8,7 @@ import WaitingRoom from './screens/WaitingRoom.jsx'
 import CategorySelect from './screens/CategorySelect.jsx'
 import PlayerSetup from './screens/PlayerSetup.jsx'
 import WordReveal from './screens/WordReveal.jsx'
+import MyWord from './screens/MyWord.jsx'
 import { createParty, joinParty, startParty } from './api/party.js'
 import { pickWord, pickImposter } from './data/words.js'
 import { useLang } from './lang/LanguageContext.jsx'
@@ -56,6 +57,7 @@ export default function App() {
   const [joinError, setJoinError] = useState(null)
   const [joinLoading, setJoinLoading] = useState(false)
   const [prefilledCode] = useState(getJoinCodeFromUrl)
+  const [myImposterIndex, setMyImposterIndex] = useState(null)
 
   function handleSetNickname(name) {
     saveNickname(name)
@@ -150,10 +152,12 @@ export default function App() {
             setScreen('categoryselect')
           } else {
             const playerNames = msg.players.map(p => p.name)
+            const myIndex = playerNames.findIndex(n => n === nickname)
             setPlayers(playerNames)
             setGameWord(msg.word)
             setImposterIndex(msg.imposterIndex)
-            setScreen('wordreveal')
+            setMyImposterIndex(myIndex === msg.imposterIndex)
+            setScreen('myword')
           }
         }}
       />
@@ -172,10 +176,12 @@ export default function App() {
             const playerNames = party.players.map(p => p.name)
             const imposter = pickImposter(playerNames)
             await startParty(partyCode, word, imposter, categories)
+            const myIndex = playerNames.findIndex(n => n === nickname)
             setPlayers(playerNames)
             setGameWord(word)
             setImposterIndex(imposter)
-            setScreen('wordreveal')
+            setMyImposterIndex(myIndex === imposter)
+            setScreen('myword')
           } else {
             setScreen('playersetup')
           }
@@ -197,6 +203,17 @@ export default function App() {
           setImposterIndex(imposter)
           setScreen('wordreveal')
         }}
+      />
+    )
+  }
+
+  if (screen === 'myword') {
+    return (
+      <MyWord
+        playerName={nickname}
+        word={gameWord}
+        isImposter={myImposterIndex}
+        onDone={() => setScreen('lobby')}
       />
     )
   }
