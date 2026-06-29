@@ -3,6 +3,7 @@ import NicknameScreen from './screens/NicknameScreen.jsx'
 import GameLobby from './screens/GameLobby.jsx'
 import ModeSelect from './screens/ModeSelect.jsx'
 import CategorySelect from './screens/CategorySelect.jsx'
+import PlayerSetup from './screens/PlayerSetup.jsx'
 
 const games = [
   {
@@ -30,6 +31,7 @@ export default function App() {
   const [screen, setScreen] = useState('lobby')
   const [selectedGame, setSelectedGame] = useState(null)
   const [selectedMode, setSelectedMode] = useState(null)
+  const [selectedCategories, setSelectedCategories] = useState([])
 
   function handleSetNickname(name) {
     saveNickname(name)
@@ -63,7 +65,21 @@ export default function App() {
       <CategorySelect
         onBack={() => setScreen('modeselect')}
         onDone={(categories) => {
-          alert(`Ready! Mode: ${selectedMode} — Categories: ${categories.join(', ')}`)
+          setSelectedCategories(categories)
+          setScreen('playersetup')
+        }}
+      />
+    )
+  }
+
+  if (screen === 'playersetup') {
+    return (
+      <PlayerSetup
+        hostName={nickname}
+        onBack={() => setScreen('categoryselect')}
+        onDone={(players) => {
+          // TODO: start selve spillet
+          alert(`Starting game!\nPlayers: ${players.join(', ')}\nCategories: ${selectedCategories.join(', ')}`)
         }}
       />
     )
