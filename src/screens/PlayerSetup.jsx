@@ -2,9 +2,27 @@ import { useState } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './PlayerSetup.module.css'
 
+function getSavedPlayers(hostName) {
+  try {
+    const saved = JSON.parse(localStorage.getItem('pg_players') || '[]')
+    if (!Array.isArray(saved) || saved.length === 0) return [hostName, '']
+    // Sæt altid den aktuelle host som nr. 1
+    const others = saved.filter(p => p !== hostName)
+    return [hostName, ...others, '']
+  } catch {
+    return [hostName, '']
+  }
+}
+
+function savePlayers(players) {
+  try {
+    localStorage.setItem('pg_players', JSON.stringify(players))
+  } catch {}
+}
+
 export default function PlayerSetup({ hostName, onBack, onDone }) {
   const { t } = useLang()
-  const [players, setPlayers] = useState([hostName, ''])
+  const [players, setPlayers] = useState(() => getSavedPlayers(hostName))
   const [focusIndex, setFocusIndex] = useState(null)
 
   function updatePlayer(index, value) {
@@ -19,6 +37,12 @@ export default function PlayerSetup({ hostName, onBack, onDone }) {
   function removePlayer(index) {
     if (players.length <= 2) return
     setPlayers(prev => prev.filter((_, i) => i !== index))
+  }
+
+  function handleDone() {
+    const filled = players.filter(p => p.trim())
+    savePlayers(filled)
+    onDone(filled)
   }
 
   const filledPlayers = players.filter(p => p.trim())
@@ -56,7 +80,7 @@ export default function PlayerSetup({ hostName, onBack, onDone }) {
         </div>
         <div className={styles.footer}>
           {!canStart && <p className={styles.hint}>{t.moreNeeded(needed)}</p>}
-          <button className={styles.startBtn} disabled={!canStart} onClick={() => onDone(filledPlayers)}>
+          <button className={styles.startBtn} disabled={!canStart} onClick={handleDone}>
             {t.letsGo}
           </button>
         </div>
