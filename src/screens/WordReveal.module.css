@@ -1,0 +1,243 @@
+.screen {
+  position: relative;
+  width: 390px;
+  min-height: 100vh;
+  background: linear-gradient(165deg, #7c3aed 0%, #6d28d9 40%, #4338ca 100%);
+  font-family: 'Fredoka', sans-serif;
+  overflow: hidden;
+}
+
+.blobTop {
+  position: absolute;
+  top: -40px;
+  right: -30px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #22d3ee, transparent 70%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.blobBottom {
+  position: absolute;
+  bottom: 80px;
+  left: -50px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f472b6, transparent 70%);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 28px;
+  text-align: center;
+  gap: 32px;
+}
+
+/* PASS */
+.passBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.passEmoji {
+  font-size: 64px;
+}
+
+.passLabel {
+  font-size: 18px;
+  font-weight: 500;
+  color: #e9d5ff;
+}
+
+.passName {
+  font-size: 38px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.passSub {
+  font-size: 14px;
+  font-weight: 400;
+  color: #c9b6e8;
+  margin-bottom: 8px;
+}
+
+.readyBtn {
+  width: 100%;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, #7c3aed, #4338ca);
+  border: none;
+  border-radius: 18px;
+  padding: 17px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -6px rgba(124,58,237,0.6);
+  margin-top: 8px;
+  transition: transform 120ms ease-out;
+}
+
+.readyBtn:active { transform: scale(0.97); }
+
+/* REVEAL */
+.revealBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.wordBadge {
+  font-size: 56px;
+}
+
+.wordLabel {
+  font-size: 16px;
+  font-weight: 500;
+  color: #e9d5ff;
+}
+
+.wordValue {
+  font-size: 46px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.imposterBadge {
+  font-size: 64px;
+}
+
+.imposterTitle {
+  font-size: 36px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.15;
+}
+
+.hintBox {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  padding: 16px 28px;
+  margin-top: 4px;
+}
+
+.hintLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e9d5ff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.hintWord {
+  font-size: 30px;
+  font-weight: 700;
+  color: #22d3ee;
+}
+
+.revealSub {
+  font-size: 14px;
+  color: #c9b6e8;
+}
+
+.doneBtn {
+  width: 100%;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a0b2e;
+  background: #fff;
+  border: none;
+  border-radius: 18px;
+  padding: 15px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -6px rgba(0,0,0,0.3);
+  margin-top: 8px;
+  transition: transform 120ms ease-out;
+}
+
+.doneBtn:active { transform: scale(0.97); }
+
+/* HIDDEN */
+.hiddenBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.hiddenEmoji {
+  font-size: 72px;
+}
+
+.hiddenText {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.hiddenSub {
+  font-size: 16px;
+  color: #e9d5ff;
+  margin-bottom: 8px;
+}
+
+.nextBtn {
+  width: 100%;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, #22d3ee, #7c3aed);
+  border: none;
+  border-radius: 18px;
+  padding: 17px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -6px rgba(34,211,238,0.5);
+  transition: transform 120ms ease-out;
+}
+
+.nextBtn:active { transform: scale(0.97); }
+
+/* Progress dots */
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  transition: background 200ms, transform 200ms;
+}
+
+.dotActive {
+  background: #fff;
+  transform: scale(1.3);
+}
+
+.dotDone {
+  background: #22d3ee;
+}

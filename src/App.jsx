@@ -4,6 +4,8 @@ import GameLobby from './screens/GameLobby.jsx'
 import ModeSelect from './screens/ModeSelect.jsx'
 import CategorySelect from './screens/CategorySelect.jsx'
 import PlayerSetup from './screens/PlayerSetup.jsx'
+import WordReveal from './screens/WordReveal.jsx'
+import { pickWord, pickImposter } from './data/words.js'
 
 const games = [
   {
@@ -32,6 +34,9 @@ export default function App() {
   const [selectedGame, setSelectedGame] = useState(null)
   const [selectedMode, setSelectedMode] = useState(null)
   const [selectedCategories, setSelectedCategories] = useState([])
+  const [players, setPlayers] = useState([])
+  const [gameWord, setGameWord] = useState(null)
+  const [imposterIndex, setImposterIndex] = useState(null)
 
   function handleSetNickname(name) {
     saveNickname(name)
@@ -77,9 +82,28 @@ export default function App() {
       <PlayerSetup
         hostName={nickname}
         onBack={() => setScreen('categoryselect')}
-        onDone={(players) => {
-          // TODO: start selve spillet
-          alert(`Starting game!\nPlayers: ${players.join(', ')}\nCategories: ${selectedCategories.join(', ')}`)
+        onDone={(playerList) => {
+          const word = pickWord(selectedCategories)
+          const imposter = pickImposter(playerList)
+          setPlayers(playerList)
+          setGameWord(word)
+          setImposterIndex(imposter)
+          setScreen('wordreveal')
+        }}
+      />
+    )
+  }
+
+  if (screen === 'wordreveal') {
+    return (
+      <WordReveal
+        players={players}
+        imposterIndex={imposterIndex}
+        word={gameWord}
+        onDone={() => {
+          // TODO: selve spillet starter her
+          alert('All players have their word — game starts now!')
+          setScreen('lobby')
         }}
       />
     )
