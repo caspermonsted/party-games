@@ -2,15 +2,15 @@ import { useState } from 'react'
 import styles from './CategorySelect.module.css'
 
 const CATEGORIES = [
-  { id: 'famous',    label: 'Berømte personer', emoji: '⭐' },
-  { id: 'food',      label: 'Mad & drikke',      emoji: '🍕' },
-  { id: 'animals',   label: 'Dyr',               emoji: '🐾' },
-  { id: 'places',    label: 'Lande & byer',      emoji: '🌍' },
-  { id: 'music',     label: 'Musik',             emoji: '🎵' },
+  { id: 'famous',    label: 'Famous people',     emoji: '⭐' },
+  { id: 'food',      label: 'Food & drinks',     emoji: '🍕' },
+  { id: 'animals',   label: 'Animals',           emoji: '🐾' },
+  { id: 'places',    label: 'Countries & cities',emoji: '🌍' },
+  { id: 'music',     label: 'Music',             emoji: '🎵' },
   { id: 'brands',    label: 'Brands',            emoji: '👟' },
-  { id: 'movies',    label: 'Film & serier',     emoji: '🎬' },
-  { id: 'sports',    label: 'Sport',             emoji: '⚽' },
-  { id: 'nature',    label: 'Natur',             emoji: '🌿' },
+  { id: 'movies',    label: 'Movies & TV',       emoji: '🎬' },
+  { id: 'sports',    label: 'Sports',            emoji: '⚽' },
+  { id: 'nature',    label: 'Nature',            emoji: '🌿' },
   { id: 'jobs',      label: 'Jobs',              emoji: '💼' },
 ]
 
@@ -39,7 +39,7 @@ export default function CategorySelect({ onBack, onDone }) {
         <button className={styles.backBtn} onClick={onBack}>← Back</button>
 
         <h1 className={styles.title}>Pick your categories</h1>
-        <p className={styles.sub}>Vælg mindst én kategori</p>
+        <p className={styles.sub}>Choose at least one category</p>
 
         <div className={styles.grid}>
           {CATEGORIES.map(cat => (
@@ -56,7 +56,7 @@ export default function CategorySelect({ onBack, onDone }) {
         </div>
 
         <button className={styles.allBtn} onClick={selectAll}>
-          Vælg alle
+          Select all
         </button>
 
         <button
@@ -64,7 +64,7 @@ export default function CategorySelect({ onBack, onDone }) {
           disabled={selected.size === 0}
           onClick={() => onDone([...selected])}
         >
-          Start spillet 🎉
+          Start game 🎉
         </button>
       </div>
     </div>

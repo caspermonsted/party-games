@@ -84,7 +84,7 @@ function RenameModal({ current, onSave, onClose }) {
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
-        <div className={styles.modalTitle}>Skift nickname</div>
+        <div className={styles.modalTitle}>Change nickname</div>
         <form onSubmit={handleSubmit}>
           <input
             className={styles.modalInput}
@@ -98,10 +98,10 @@ function RenameModal({ current, onSave, onClose }) {
             type="submit"
             disabled={!value.trim()}
           >
-            Gem
+            Save
           </button>
         </form>
-        <button className={styles.modalCancel} onClick={onClose}>Annuller</button>
+        <button className={styles.modalCancel} onClick={onClose}>Cancel</button>
       </div>
     </div>
   )

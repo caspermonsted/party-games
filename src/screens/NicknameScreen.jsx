@@ -19,13 +19,13 @@ export default function NicknameScreen({ onDone }) {
       <div className={styles.content}>
         <div className={styles.emoji}>🎉</div>
         <h1 className={styles.title}>What's your nickname?</h1>
-        <p className={styles.sub}>Dit navn vises til de andre spillere</p>
+        <p className={styles.sub}>Your name will be shown to other players</p>
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <input
             className={styles.input}
             type="text"
-            placeholder="Skriv dit nickname..."
+            placeholder="Enter your nickname..."
             value={name}
             onChange={e => setName(e.target.value)}
             maxLength={20}

@@ -63,7 +63,7 @@ export default function App() {
       <CategorySelect
         onBack={() => setScreen('modeselect')}
         onDone={(categories) => {
-          alert(`Klar! Mode: ${selectedMode} — Kategorier: ${categories.join(', ')}`)
+          alert(`Ready! Mode: ${selectedMode} — Categories: ${categories.join(', ')}`)
         }}
       />
     )
