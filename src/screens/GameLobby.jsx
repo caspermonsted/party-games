@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './GameLobby.module.css'
 
 export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
+  const { t, lang, toggleLang } = useLang()
   const [activeTab, setActiveTab] = useState('home')
   const [showRename, setShowRename] = useState(false)
   const availableGames = games.filter(g => g.status === 'available')
@@ -13,13 +15,18 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
       <div className={styles.blobBottom} />
 
       <div className={styles.content}>
+        {/* Language toggle */}
+        <button className={styles.langBtn} onClick={toggleLang}>
+          {lang === 'en' ? '🇩🇰 DA' : '🇬🇧 EN'}
+        </button>
+
         {/* Header */}
         <div className={styles.header}>
           <div>
-            <div className={styles.greeting}>Hey {user.name}</div>
-            <div className={styles.headline}>Let's play!</div>
+            <div className={styles.greeting}>{t.greeting} {user.name}</div>
+            <div className={styles.headline}>{t.headline}</div>
           </div>
-          <button className={styles.avatar} onClick={() => setShowRename(true)} title="Skift navn">
+          <button className={styles.avatar} onClick={() => setShowRename(true)}>
             {user.initial}
             <span className={styles.avatarEdit}>✏️</span>
           </button>
@@ -27,26 +34,26 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
 
         {/* Section label */}
         <div className={styles.sectionRow}>
-          <span className={styles.sectionLabel}>Party games</span>
-          <span className={styles.countPill}>{readyCount} ready</span>
+          <span className={styles.sectionLabel}>{t.partyGames}</span>
+          <span className={styles.countPill}>{readyCount} {t.ready}</span>
         </div>
 
         {/* Available game cards */}
         {availableGames.map(game => (
-          <GameCard key={game.id} game={game} onPlay={() => onPlay(game)} />
+          <GameCard key={game.id} game={game} onPlay={() => onPlay(game)} t={t} />
         ))}
 
         {/* Coming soon */}
         <div className={styles.comingSoonRow}>
           <div className={styles.comingSoonCard}>
             <div className={styles.comingSoonIcon}>+</div>
-            <div className={styles.comingSoonTitle}>More soon</div>
-            <div className={styles.comingSoonSub}>New games on the way</div>
+            <div className={styles.comingSoonTitle}>{t.moreSoon}</div>
+            <div className={styles.comingSoonSub}>{t.moreSoonSub}</div>
           </div>
           <div className={styles.comingSoonCard}>
             <div className={styles.comingSoonIcon}>★</div>
-            <div className={styles.comingSoonTitle}>Vote next</div>
-            <div className={styles.comingSoonSub}>Pick what we build</div>
+            <div className={styles.comingSoonTitle}>{t.voteNext}</div>
+            <div className={styles.comingSoonSub}>{t.voteNextSub}</div>
           </div>
         </div>
 
@@ -59,10 +66,10 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
         </nav>
       </div>
 
-      {/* Rename modal */}
       {showRename && (
         <RenameModal
           current={user.name}
+          t={t}
           onSave={(name) => { onChangeNickname(name); setShowRename(false) }}
           onClose={() => setShowRename(false)}
         />
@@ -71,7 +78,7 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
   )
 }
 
-function RenameModal({ current, onSave, onClose }) {
+function RenameModal({ current, t, onSave, onClose }) {
   const [value, setValue] = useState(current)
 
   function handleSubmit(e) {
@@ -84,7 +91,7 @@ function RenameModal({ current, onSave, onClose }) {
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
-        <div className={styles.modalTitle}>Change nickname</div>
+        <div className={styles.modalTitle}>{t.changeNickname}</div>
         <form onSubmit={handleSubmit}>
           <input
             className={styles.modalInput}
@@ -93,21 +100,17 @@ function RenameModal({ current, onSave, onClose }) {
             maxLength={20}
             autoFocus
           />
-          <button
-            className={styles.modalBtn}
-            type="submit"
-            disabled={!value.trim()}
-          >
-            Save
+          <button className={styles.modalBtn} type="submit" disabled={!value.trim()}>
+            {t.save}
           </button>
         </form>
-        <button className={styles.modalCancel} onClick={onClose}>Cancel</button>
+        <button className={styles.modalCancel} onClick={onClose}>{t.cancel}</button>
       </div>
     </div>
   )
 }
 
-function GameCard({ game, onPlay }) {
+function GameCard({ game, onPlay, t }) {
   const [pressed, setPressed] = useState(false)
 
   return (
@@ -132,7 +135,7 @@ function GameCard({ game, onPlay }) {
         onTouchStart={() => setPressed(true)}
         onTouchEnd={() => { setPressed(false); onPlay() }}
       >
-        Play now
+        {t.playNow}
       </button>
     </div>
   )

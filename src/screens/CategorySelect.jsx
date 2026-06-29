@@ -1,20 +1,22 @@
 import { useState } from 'react'
+import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './CategorySelect.module.css'
 
-const CATEGORIES = [
-  { id: 'famous',    label: 'Famous people',     emoji: '⭐' },
-  { id: 'food',      label: 'Food & drinks',     emoji: '🍕' },
-  { id: 'animals',   label: 'Animals',           emoji: '🐾' },
-  { id: 'places',    label: 'Countries & cities',emoji: '🌍' },
-  { id: 'music',     label: 'Music',             emoji: '🎵' },
-  { id: 'brands',    label: 'Brands',            emoji: '👟' },
-  { id: 'movies',    label: 'Movies & TV',       emoji: '🎬' },
-  { id: 'sports',    label: 'Sports',            emoji: '⚽' },
-  { id: 'nature',    label: 'Nature',            emoji: '🌿' },
-  { id: 'jobs',      label: 'Jobs',              emoji: '💼' },
+const CATEGORY_KEYS = [
+  { id: 'famous',  labelKey: 'catFamous',  emoji: '⭐' },
+  { id: 'food',    labelKey: 'catFood',    emoji: '🍕' },
+  { id: 'animals', labelKey: 'catAnimals', emoji: '🐾' },
+  { id: 'places',  labelKey: 'catPlaces',  emoji: '🌍' },
+  { id: 'music',   labelKey: 'catMusic',   emoji: '🎵' },
+  { id: 'brands',  labelKey: 'catBrands',  emoji: '👟' },
+  { id: 'movies',  labelKey: 'catMovies',  emoji: '🎬' },
+  { id: 'sports',  labelKey: 'catSports',  emoji: '⚽' },
+  { id: 'nature',  labelKey: 'catNature',  emoji: '🌿' },
+  { id: 'jobs',    labelKey: 'catJobs',    emoji: '💼' },
 ]
 
 export default function CategorySelect({ onBack, onDone }) {
+  const { t } = useLang()
   const [selected, setSelected] = useState(new Set())
 
   function toggle(id) {
@@ -27,44 +29,37 @@ export default function CategorySelect({ onBack, onDone }) {
   }
 
   function selectAll() {
-    setSelected(new Set(CATEGORIES.map(c => c.id)))
+    setSelected(new Set(CATEGORY_KEYS.map(c => c.id)))
   }
 
   return (
     <div className={styles.screen}>
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
-
       <div className={styles.content}>
         <button className={styles.backBtn} onClick={onBack}>← Back</button>
-
-        <h1 className={styles.title}>Pick your categories</h1>
-        <p className={styles.sub}>Choose at least one category</p>
-
+        <h1 className={styles.title}>{t.pickCategories}</h1>
+        <p className={styles.sub}>{t.chooseSub}</p>
         <div className={styles.grid}>
-          {CATEGORIES.map(cat => (
+          {CATEGORY_KEYS.map(cat => (
             <button
               key={cat.id}
               className={`${styles.chip} ${selected.has(cat.id) ? styles.chipOn : ''}`}
               onClick={() => toggle(cat.id)}
             >
               <span className={styles.chipEmoji}>{cat.emoji}</span>
-              <span className={styles.chipLabel}>{cat.label}</span>
+              <span className={styles.chipLabel}>{t[cat.labelKey]}</span>
               {selected.has(cat.id) && <span className={styles.check}>✓</span>}
             </button>
           ))}
         </div>
-
-        <button className={styles.allBtn} onClick={selectAll}>
-          Select all
-        </button>
-
+        <button className={styles.allBtn} onClick={selectAll}>{t.selectAll}</button>
         <button
           className={styles.startBtn}
           disabled={selected.size === 0}
           onClick={() => onDone([...selected])}
         >
-          Start game 🎉
+          {t.startGame}
         </button>
       </div>
     </div>

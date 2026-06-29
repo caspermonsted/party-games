@@ -40,6 +40,27 @@
   padding: 56px 22px 24px;
 }
 
+.langBtn {
+  position: absolute;
+  top: 16px;
+  left: 22px;
+  background: rgba(255,255,255,0.16);
+  border: none;
+  border-radius: 14px;
+  padding: 6px 12px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: background 120ms;
+  z-index: 10;
+}
+
+.langBtn:hover {
+  background: rgba(255,255,255,0.26);
+}
+
 /* Header */
 .header {
   display: flex;
