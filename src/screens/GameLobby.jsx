@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styles from './GameLobby.module.css'
 
-export default function GameLobby({ user, games }) {
+export default function GameLobby({ user, games, onPlay }) {
   const [activeTab, setActiveTab] = useState('home')
   const availableGames = games.filter(g => g.status === 'available')
   const readyCount = availableGames.length
@@ -30,7 +30,7 @@ export default function GameLobby({ user, games }) {
 
         {/* Available game cards */}
         {availableGames.map(game => (
-          <GameCard key={game.id} game={game} />
+          <GameCard key={game.id} game={game} onPlay={() => onPlay(game)} />
         ))}
 
         {/* Coming soon */}
@@ -83,7 +83,7 @@ export default function GameLobby({ user, games }) {
   )
 }
 
-function GameCard({ game }) {
+function GameCard({ game, onPlay }) {
   const [pressed, setPressed] = useState(false)
 
   return (
@@ -103,10 +103,10 @@ function GameCard({ game }) {
         className={styles.playBtn}
         style={{ transform: pressed ? 'scale(0.97)' : 'scale(1)' }}
         onMouseDown={() => setPressed(true)}
-        onMouseUp={() => setPressed(false)}
+        onMouseUp={() => { setPressed(false); onPlay() }}
         onMouseLeave={() => setPressed(false)}
         onTouchStart={() => setPressed(true)}
-        onTouchEnd={() => setPressed(false)}
+        onTouchEnd={() => { setPressed(false); onPlay() }}
       >
         Play now
       </button>
