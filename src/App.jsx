@@ -2,6 +2,7 @@ import { useState } from 'react'
 import NicknameScreen from './screens/NicknameScreen.jsx'
 import GameLobby from './screens/GameLobby.jsx'
 import ModeSelect from './screens/ModeSelect.jsx'
+import CategorySelect from './screens/CategorySelect.jsx'
 
 const games = [
   {
@@ -18,8 +19,9 @@ const games = [
 
 export default function App() {
   const [nickname, setNickname] = useState(null)
-  const [screen, setScreen] = useState('lobby') // 'lobby' | 'modeselect'
+  const [screen, setScreen] = useState('lobby')
   const [selectedGame, setSelectedGame] = useState(null)
+  const [selectedMode, setSelectedMode] = useState(null)
 
   if (!nickname) {
     return <NicknameScreen onDone={setNickname} />
@@ -30,14 +32,26 @@ export default function App() {
     initial: nickname[0].toUpperCase(),
   }
 
-  if (screen === 'modeselect' && selectedGame) {
+  if (screen === 'modeselect') {
     return (
       <ModeSelect
         game={selectedGame}
         onBack={() => setScreen('lobby')}
         onSelect={(mode) => {
-          // TODO: navigate til selve spillet med valgt mode
-          alert(`Spilmode: ${mode} — kommer snart!`)
+          setSelectedMode(mode)
+          setScreen('categoryselect')
+        }}
+      />
+    )
+  }
+
+  if (screen === 'categoryselect') {
+    return (
+      <CategorySelect
+        onBack={() => setScreen('modeselect')}
+        onDone={(categories) => {
+          // TODO: start selve spillet med mode + categories
+          alert(`Klar! Mode: ${selectedMode} — Kategorier: ${categories.join(', ')}`)
         }}
       />
     )
