@@ -78,6 +78,56 @@
   margin-bottom: 36px;
 }
 
+.scanBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 18px;
+  padding: 16px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: background 120ms, transform 120ms;
+}
+
+.scanBtn:hover {
+  background: rgba(255,255,255,0.22);
+}
+
+.scanBtn:active {
+  transform: scale(0.97);
+}
+
+.scanIcon {
+  font-size: 22px;
+}
+
+.divider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.25);
+}
+
+.dividerText {
+  font-size: 13px;
+  font-weight: 500;
+  color: #c9b6e8;
+  white-space: nowrap;
+}
+
 .form {
   width: 100%;
   display: flex;

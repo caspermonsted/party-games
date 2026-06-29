@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import QrScanner from './QrScanner.jsx'
 import styles from './JoinParty.module.css'
 
 export default function JoinParty({ onBack, onSubmit, error, loading, initialCode = '' }) {
   const [code, setCode] = useState(initialCode)
+  const [showScanner, setShowScanner] = useState(false)
 
   function handleInput(e) {
     const val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4)
@@ -15,6 +17,13 @@ export default function JoinParty({ onBack, onSubmit, error, loading, initialCod
     onSubmit(code)
   }
 
+  function handleScan(scannedCode) {
+    setShowScanner(false)
+    setCode(scannedCode)
+    // Submit automatisk når QR er scannet
+    setTimeout(() => onSubmit(scannedCode), 200)
+  }
+
   return (
     <div className={styles.screen}>
       <div className={styles.blobTop} />
@@ -25,8 +34,20 @@ export default function JoinParty({ onBack, onSubmit, error, loading, initialCod
 
         <div className={styles.emoji}>🔑</div>
         <h1 className={styles.title}>Join a party</h1>
-        <p className={styles.sub}>Enter the 4-letter code from your host</p>
 
+        {/* QR scan knap */}
+        <button className={styles.scanBtn} onClick={() => setShowScanner(true)}>
+          <span className={styles.scanIcon}>📷</span>
+          Scan QR code
+        </button>
+
+        <div className={styles.divider}>
+          <span className={styles.dividerLine} />
+          <span className={styles.dividerText}>or enter code</span>
+          <span className={styles.dividerLine} />
+        </div>
+
+        {/* PIN kode input */}
         <form onSubmit={handleJoin} className={styles.form}>
           <input
             className={`${styles.codeInput} ${error ? styles.codeInputError : ''}`}
@@ -35,7 +56,6 @@ export default function JoinParty({ onBack, onSubmit, error, loading, initialCod
             onChange={handleInput}
             placeholder="ABCD"
             maxLength={4}
-            autoFocus
             autoCapitalize="characters"
           />
 
@@ -50,8 +70,15 @@ export default function JoinParty({ onBack, onSubmit, error, loading, initialCod
           </button>
         </form>
 
-        <p className={styles.hint}>Ask your host for the party code</p>
+        <p className={styles.hint}>Ask your host for the QR code or party code</p>
       </div>
+
+      {showScanner && (
+        <QrScanner
+          onScan={handleScan}
+          onClose={() => setShowScanner(false)}
+        />
+      )}
     </div>
   )
 }
