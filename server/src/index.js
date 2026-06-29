@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const clientDist = join(__dirname, '../../client/dist');
+const clientDist = join(__dirname, '../../dist');
 
 app.use(express.json());
 
