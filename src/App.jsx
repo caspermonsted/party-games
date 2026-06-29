@@ -8,8 +8,8 @@ import WaitingRoom from './screens/WaitingRoom.jsx'
 import CategorySelect from './screens/CategorySelect.jsx'
 import PlayerSetup from './screens/PlayerSetup.jsx'
 import WordReveal from './screens/WordReveal.jsx'
+import { createParty, joinParty, startParty } from './api/party.js'
 import { pickWord, pickImposter } from './data/words.js'
-import { usePartySocket } from './hooks/usePartySocket.js'
 
 const games = [
   {
@@ -41,46 +41,11 @@ export default function App() {
   const [gameWord, setGameWord] = useState(null)
   const [imposterIndex, setImposterIndex] = useState(null)
 
-  // Multi-phone party state
+  // Party state
   const [partyCode, setPartyCode] = useState(null)
-  const [partyPlayers, setPartyPlayers] = useState([])
   const [isHost, setIsHost] = useState(false)
   const [joinError, setJoinError] = useState(null)
   const [joinLoading, setJoinLoading] = useState(false)
-
-  const { send: multiSend } = usePartySocket((msg) => {
-    if (msg.type === 'party_created') {
-      setPartyCode(msg.code)
-      setPartyPlayers(msg.players)
-      setIsHost(true)
-      setPartySend(() => multiSend)
-      setScreen('waitingroom')
-    }
-    if (msg.type === 'party_joined') {
-      setPartyCode(msg.code)
-      setPartyPlayers(msg.players)
-      setIsHost(false)
-      setPartySend(() => multiSend)
-      setScreen('waitingroom')
-    }
-    if (msg.type === 'player_joined' || msg.type === 'player_left') {
-      setPartyPlayers(msg.players)
-    }
-    if (msg.type === 'join_error') {
-      setJoinLoading(false)
-      setJoinError(
-        msg.message === 'Party not found' ? 'No party found with that code 🤔'
-        : msg.message === 'Game already started' ? 'That game has already started!'
-        : msg.message === 'Name already taken' ? 'That name is already taken in this party!'
-        : msg.message
-      )
-    }
-    if (msg.type === 'party_disbanded' || msg.type === 'kicked') {
-      setScreen('lobby')
-      setPartyCode(null)
-      setPartyPlayers([])
-    }
-  })
 
   function handleSetNickname(name) {
     saveNickname(name)
@@ -91,7 +56,6 @@ export default function App() {
 
   const user = { name: nickname, initial: nickname[0].toUpperCase() }
 
-  // Same phone flow
   if (screen === 'modeselect') {
     return (
       <ModeSelect
@@ -106,15 +70,21 @@ export default function App() {
     )
   }
 
-  // Multi-phone flow
   if (screen === 'joinorcreate') {
     return (
       <JoinOrCreate
         onBack={() => setScreen('modeselect')}
-        onCreate={() => {
-          multiSend({ type: 'create_party', name: nickname })
+        onCreate={async () => {
+          try {
+            const { code } = await createParty(nickname)
+            setPartyCode(code)
+            setIsHost(true)
+            setScreen('waitingroom')
+          } catch (e) {
+            alert('Could not create party. Try again.')
+          }
         }}
-        onJoin={() => setScreen('joinparty')}
+        onJoin={() => { setJoinError(null); setScreen('joinparty') }}
       />
     )
   }
@@ -122,13 +92,27 @@ export default function App() {
   if (screen === 'joinparty') {
     return (
       <JoinParty
-        onBack={() => { setJoinError(null); setScreen('joinorcreate') }}
+        onBack={() => setScreen('joinorcreate')}
         error={joinError}
         loading={joinLoading}
-        onSubmit={(code) => {
+        onSubmit={async (code) => {
           setJoinError(null)
           setJoinLoading(true)
-          multiSend({ type: 'join_party', code, name: nickname })
+          try {
+            await joinParty(code, nickname)
+            setPartyCode(code)
+            setIsHost(false)
+            setScreen('waitingroom')
+          } catch (e) {
+            setJoinError(
+              e.message === 'Party not found' ? 'No party found with that code 🤔'
+              : e.message === 'Game already started' ? 'That game has already started!'
+              : e.message === 'Name already taken' ? 'That name is already taken in this party!'
+              : 'Something went wrong. Try again.'
+            )
+          } finally {
+            setJoinLoading(false)
+          }
         }}
       />
     )
@@ -139,28 +123,18 @@ export default function App() {
       <WaitingRoom
         playerName={nickname}
         code={partyCode}
-        initialPlayers={partyPlayers}
-        send={multiSend}
         isHost={isHost}
+        onBack={() => setScreen('joinorcreate')}
         onGameStart={(msg) => {
           if (msg.fromHost) {
-            // Host picks categories then starts
             setScreen('categoryselect')
           } else {
-            // Players receive game_started from server
-            const word = msg.word
-            const imposter = msg.imposterIndex
             const playerNames = msg.players.map(p => p.name)
             setPlayers(playerNames)
-            setGameWord(word)
-            setImposterIndex(imposter)
+            setGameWord(msg.word)
+            setImposterIndex(msg.imposterIndex)
             setScreen('wordreveal')
           }
-        }}
-        onDisbanded={() => {
-          setScreen('lobby')
-          setPartyCode(null)
-          setPartyPlayers([])
         }}
       />
     )
@@ -170,20 +144,14 @@ export default function App() {
     return (
       <CategorySelect
         onBack={() => selectedMode === 'multi' ? setScreen('waitingroom') : setScreen('modeselect')}
-        onDone={(categories) => {
+        onDone={async (categories) => {
           setSelectedCategories(categories)
           if (selectedMode === 'multi') {
-            // Host picks word & imposter, broadcasts to all
             const word = pickWord(categories)
-            const playerNames = partyPlayers.map(p => p.name)
+            const party = await import('./api/party.js').then(m => m.getParty(partyCode))
+            const playerNames = party.players.map(p => p.name)
             const imposter = pickImposter(playerNames)
-            multiSend({
-              type: 'start_game',
-              code: partyCode,
-              categories,
-              word,
-              imposterIndex: imposter,
-            })
+            await startParty(partyCode, word, imposter, categories)
             setPlayers(playerNames)
             setGameWord(word)
             setImposterIndex(imposter)

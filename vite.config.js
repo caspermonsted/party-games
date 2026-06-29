@@ -6,11 +6,6 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': 'http://localhost:3000',
-      // Proxy WebSocket connections til Express-serveren
-      '/ws': {
-        target: 'ws://localhost:3000',
-        ws: true,
-      },
     },
   },
 })
