@@ -1,0 +1,255 @@
+.screen {
+  position: relative;
+  width: 390px;
+  min-height: 100vh;
+  background: linear-gradient(165deg, #7c3aed 0%, #6d28d9 40%, #4338ca 100%);
+  font-family: 'Fredoka', sans-serif;
+  overflow: hidden;
+}
+
+/* Decorative blobs */
+.blobTop {
+  position: absolute;
+  top: -40px;
+  right: -30px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #22d3ee, transparent 70%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.blobBottom {
+  position: absolute;
+  bottom: 120px;
+  left: -50px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f472b6, transparent 70%);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 56px 22px 24px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.greeting {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e9d5ff;
+}
+
+.headline {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.05;
+}
+
+.avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fbbf24, #f472b6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+  font-size: 18px;
+  box-shadow: 0 6px 16px rgba(244, 114, 182, 0.5);
+  flex-shrink: 0;
+}
+
+/* Section label */
+.sectionRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.sectionLabel {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.countPill {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a0b2e;
+  background: #22d3ee;
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+
+/* Game card */
+.gameCard {
+  margin-top: 16px;
+  background: #fff;
+  border-radius: 30px;
+  padding: 22px;
+  box-shadow: 0 18px 36px -10px rgba(0, 0, 0, 0.4);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logoBadge {
+  width: 64px;
+  height: 64px;
+  border-radius: 22px;
+  background: linear-gradient(140deg, #a855f7, #22d3ee);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(168, 85, 247, 0.45);
+  flex-shrink: 0;
+}
+
+.gameTitle {
+  font-size: 23px;
+  font-weight: 700;
+  color: #1a0b2e;
+  line-height: 1;
+}
+
+.gameDesc {
+  font-size: 14px;
+  font-weight: 500;
+  color: #8b7aa8;
+  margin-top: 4px;
+}
+
+.metaRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.pillPlayers {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7c3aed;
+  background: #f3e8ff;
+  border-radius: 16px;
+  padding: 6px 12px;
+}
+
+.pillTime {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0891b2;
+  background: #cffafe;
+  border-radius: 16px;
+  padding: 6px 12px;
+}
+
+.playBtn {
+  margin-top: 18px;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: #fff;
+  background: linear-gradient(90deg, #7c3aed, #4338ca);
+  border-radius: 18px;
+  padding: 15px;
+  box-shadow: 0 10px 22px -6px rgba(124, 58, 237, 0.6);
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+}
+
+.playBtn:hover {
+  box-shadow: 0 14px 28px -6px rgba(124, 58, 237, 0.7);
+}
+
+/* Coming soon */
+.comingSoonRow {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.comingSoonCard {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 24px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comingSoonIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #e9d5ff;
+}
+
+.comingSoonTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.comingSoonSub {
+  font-size: 11px;
+  font-weight: 400;
+  color: #d8c7f0;
+}
+
+/* Bottom nav */
+.bottomNav {
+  margin-top: auto;
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 28px;
+  padding: 14px 10px;
+}
+
+.navItem {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #c9b6e8;
+  padding: 4px 8px;
+  line-height: 1;
+  transition: color 120ms ease-out;
+}
+
+.navActive {
+  color: #fff;
+}
