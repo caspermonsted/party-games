@@ -50,14 +50,15 @@ export default function CategorySelect({ onBack, onDone }) {
     setGenerating(true)
     setGenError(null)
     try {
-      const result = await generateCategory(name, lang)
+      const words = await generateCategory(name, lang)
+      if (!words || words.length === 0) throw new Error('no words')
       const id = `custom_${Date.now()}`
-      const newCat = { id, label: name, words: result.words }
+      const newCat = { id, label: name, words }
       setCustomCategories(prev => [...prev, newCat])
       setSelected(prev => new Set([...prev, id]))
       setCustomInput('')
     } catch (e) {
-      setGenError(e.message || t.genError)
+      setGenError(t.genError)
     } finally {
       setGenerating(false)
     }
