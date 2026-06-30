@@ -3,9 +3,6 @@ import { createServer } from 'http'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { existsSync } from 'fs'
-import Anthropic from '@anthropic-ai/sdk'
-
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 const app = express()
 const server = createServer(app)
@@ -17,48 +14,56 @@ const clientDist = join(__dirname, '../../dist')
 app.use(express.json())
 app.get('/health', (_req, res) => res.json({ ok: true }))
 
-// ─── AI kategori-generator ────────────────────────────────────
+// ─── AI kategori-generator (Pollinations AI — ingen konto nødvendig) ──────────
 app.post('/api/generate-category', async (req, res) => {
   const { category, lang } = req.body
   if (!category) return res.status(400).json({ error: 'category required' })
-  if (!process.env.ANTHROPIC_API_KEY) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set on server' })
 
   const isDA = lang === 'da'
 
   const prompt = isDA
-    ? `Du er hjælper til et partyspil kaldet Imposter Game. Spillerne får et ord fra en kategori. Én spiller er imposteren og får i stedet et enkelt hint-ord der er INDIREKTE relateret til det rigtige ord — svært nok til at det ikke er åbenlyst, men nok til at imposteren kan blende ind.
+    ? `Du er hjælper til et partyspil kaldet Imposter Game. Spillerne får et ord fra en kategori. Én spiller er imposteren og får et enkelt hint-ord der er INDIREKTE relateret til det rigtige ord.
 
 Generer 10 ord til kategorien: "${category}"
 
-Regler for hints:
+Regler:
 - Hintet skal være ét enkelt ord
-- Hintet må IKKE være selve ordet eller et direkte synonym
-- Hintet skal være noget man associerer med ordet, men som er én grad fjernet
-- Eks: ord="Pizza" hint="Skærer" (ikke "Tomat" eller "Ost")
+- Hintet må IKKE være selve ordet
+- Hintet skal være associeret med ordet, men én grad fjernet
+- Eks: ord="Pikachu" hint="Strøm", ord="Charizard" hint="Flamme"
 
-Svar KUN med et JSON-array, ingen forklaring:
+Svar KUN med et JSON-array uden forklaring eller markdown:
 [{"word":"...","hint":"..."},...]`
-    : `You are a helper for a party game called Imposter Game. Players get a word from a category. One player is the imposter and gets a single hint word that is INDIRECTLY related to the real word — tricky enough not to be obvious, but enough to blend in.
+    : `You are a helper for a party game called Imposter Game. One player is the imposter and gets a single hint word INDIRECTLY related to the real word.
 
 Generate 10 words for the category: "${category}"
 
-Rules for hints:
-- The hint must be a single word
-- The hint must NOT be the word itself or a direct synonym
-- The hint should be something associated with the word, but one step removed
-- E.g.: word="Pizza" hint="Cutter" (not "Tomato" or "Cheese")
+Rules:
+- Hint must be a single word
+- Hint must NOT be the word itself
+- Hint should be associated but one step removed
+- E.g.: word="Pikachu" hint="Electricity", word="Charizard" hint="Flame"
 
-Reply ONLY with a JSON array, no explanation:
+Reply ONLY with a JSON array, no explanation or markdown:
 [{"word":"...","hint":"..."},...]`
 
   try {
-    const message = await anthropic.messages.create({
-      model: 'claude-3-5-haiku-20241022',
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: prompt }],
+    const response = await fetch('https://api.pollinations.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'openai',
+        messages: [{ role: 'user', content: prompt }],
+        seed: Math.floor(Math.random() * 10000),
+      }),
     })
 
-    const text = message.content[0].text.trim()
+    if (!response.ok) throw new Error(`Pollinations error: ${response.status}`)
+
+    const data = await response.json()
+    const text = data.choices?.[0]?.message?.content?.trim()
+    if (!text) throw new Error('Empty response from AI')
+
     const jsonMatch = text.match(/\[[\s\S]*\]/)
     if (!jsonMatch) throw new Error('No JSON array in response')
 
@@ -67,8 +72,8 @@ Reply ONLY with a JSON array, no explanation:
 
     res.json({ words, category })
   } catch (e) {
-    console.error('[AI] generate-category error:', e)
-    res.status(500).json({ error: 'Failed to generate words. Try again.' })
+    console.error('[AI] generate-category error:', e.message)
+    res.status(500).json({ error: 'Could not generate words. Try again.' })
   }
 })
 
