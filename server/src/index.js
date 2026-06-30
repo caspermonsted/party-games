@@ -48,29 +48,30 @@ Reply ONLY with a JSON array, no explanation or markdown:
 [{"word":"...","hint":"..."},...]`
 
   try {
-    const response = await fetch('https://api.pollinations.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'openai',
-        messages: [{ role: 'user', content: prompt }],
-        seed: Math.floor(Math.random() * 10000),
-      }),
+    const url = `https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=openai-large&json=true&seed=${Math.floor(Math.random() * 9999)}`
+
+    const response = await fetch(url, {
+      headers: { 'Accept': 'application/json' },
+      signal: AbortSignal.timeout(20000), // 20 sek timeout
     })
 
-    if (!response.ok) throw new Error(`Pollinations error: ${response.status}`)
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
-    const data = await response.json()
-    const text = data.choices?.[0]?.message?.content?.trim()
-    if (!text) throw new Error('Empty response from AI')
-
+    const text = (await response.text()).trim()
     const jsonMatch = text.match(/\[[\s\S]*\]/)
-    if (!jsonMatch) throw new Error('No JSON array in response')
+    if (!jsonMatch) throw new Error('No JSON in response')
 
     const words = JSON.parse(jsonMatch[0])
-    if (!Array.isArray(words) || words.length === 0) throw new Error('Invalid word list')
+    if (!Array.isArray(words) || words.length === 0) throw new Error('Empty word list')
 
-    res.json({ words, category })
+    // Sørg for at hvert ord har word og hint som strings
+    const clean = words
+      .filter(w => w.word && w.hint)
+      .map(w => ({ word: String(w.word).trim(), hint: String(w.hint).trim() }))
+
+    if (clean.length === 0) throw new Error('No valid words')
+
+    res.json({ words: clean, category })
   } catch (e) {
     console.error('[AI] generate-category error:', e.message)
     res.status(500).json({ error: 'Could not generate words. Try again.' })
