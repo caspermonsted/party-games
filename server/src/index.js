@@ -14,30 +14,57 @@ const clientDist = join(__dirname, '../../dist')
 app.use(express.json())
 app.get('/health', (_req, res) => res.json({ ok: true }))
 
-// ─── AI kategori-generator (Pollinations AI — ingen konto nødvendig) ──────────
+// ─── AI kategori-generator (Groq) ────────────────────────────
 app.post('/api/generate-category', async (req, res) => {
   const { category, lang } = req.body
   if (!category) return res.status(400).json({ error: 'category required' })
 
+  const apiKey = process.env.GROQ_API_KEY
+  if (!apiKey) return res.status(500).json({ error: 'GROQ_API_KEY not set' })
+
   const isDA = lang === 'da'
-  const prompt = isDA
-    ? `Du laver ord til et partyspil kaldet Imposter Game. Én spiller er imposteren og får et hint-ord i stedet for det rigtige ord.\n\nLav 10 ord til kategorien: "${category}"\n\nRegler:\n- Hint = ét enkelt ord, indirekte relateret til ordet\n- Hint må ikke være selve ordet\n- Eks: ord="Pikachu" hint="Strøm", ord="Charizard" hint="Flamme"\n\nSvar KUN med JSON array:\n[{"word":"...","hint":"..."}]`
-    : `Generate 10 words for the Imposter Game party game. Category: "${category}"\n\nRules:\n- Each entry has a word and a one-word hint\n- Hint must be indirectly related (not the word itself)\n- E.g.: word="Pikachu" hint="Electricity", word="Charizard" hint="Flame"\n\nReply ONLY with a JSON array:\n[{"word":"...","hint":"..."}]`
+
+  const userMsg = isDA
+    ? `Lav 10 ord til kategorien "${category}" til Imposter Game. Hvert ord skal have et enkelt hint-ord der er indirekte relateret (ikke selve ordet). Svar KUN med JSON: [{"word":"...","hint":"..."}]`
+    : `Generate 10 words for the category "${category}" for Imposter Game. Each needs a single indirect hint word (not the word itself). Reply ONLY with JSON: [{"word":"...","hint":"..."}]`
 
   try {
-    const url = `https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=openai-large&json=true&seed=${Math.floor(Math.random() * 9999)}`
-    const response = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(20000) })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const text = (await response.text()).trim()
-    const jsonMatch = text.match(/\[[\s\S]*\]/)
-    if (!jsonMatch) throw new Error('No JSON in response')
-    const words = JSON.parse(jsonMatch[0])
-    if (!Array.isArray(words) || words.length === 0) throw new Error('Empty word list')
-    const clean = words.filter(w => w.word && w.hint).map(w => ({ word: String(w.word).trim(), hint: String(w.hint).trim() }))
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: userMsg }],
+        temperature: 0.8,
+        max_tokens: 800,
+      }),
+      signal: AbortSignal.timeout(15000),
+    })
+
+    if (!response.ok) {
+      const err = await response.text()
+      throw new Error(`Groq error ${response.status}: ${err}`)
+    }
+
+    const data = await response.json()
+    const text = data.choices?.[0]?.message?.content?.trim()
+    if (!text) throw new Error('Empty response')
+
+    const match = text.match(/\[[\s\S]*?\]/)
+    if (!match) throw new Error('No JSON array in response')
+
+    const words = JSON.parse(match[0])
+    const clean = words
+      .filter(w => w.word && w.hint)
+      .map(w => ({ word: String(w.word).trim(), hint: String(w.hint).trim() }))
+
     if (clean.length === 0) throw new Error('No valid words')
     res.json({ words: clean, category })
   } catch (e) {
-    console.error('[AI] generate-category error:', e.message)
+    console.error('[Groq] error:', e.message)
     res.status(500).json({ error: 'Could not generate words. Try again.' })
   }
 })
