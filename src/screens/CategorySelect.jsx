@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
-import { generateCategory } from '../api/party.js'
+import { generateCategory } from '../api/generateCategory.js'
 import styles from './CategorySelect.module.css'
 
 const CATEGORY_KEYS = [
