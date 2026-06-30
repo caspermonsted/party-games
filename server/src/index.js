@@ -19,8 +19,8 @@ app.post('/api/generate-category', async (req, res) => {
   const { category, lang } = req.body
   if (!category) return res.status(400).json({ error: 'category required' })
 
-  const apiKey = process.env.GROQ_API_KEY
-  if (!apiKey) return res.status(500).json({ error: 'GROQ_API_KEY not set' })
+  const apiKey = process.env.GROK_API_KEY
+  if (!apiKey) return res.status(500).json({ error: 'GROK_API_KEY not set' })
 
   const isDA = lang === 'da'
 
@@ -29,14 +29,14 @@ app.post('/api/generate-category', async (req, res) => {
     : `Generate 10 words for the category "${category}" for Imposter Game. Each needs a single indirect hint word (not the word itself). Reply ONLY with JSON: [{"word":"...","hint":"..."}]`
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const response = await fetch('https://api.x.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'grok-3-fast-beta',
         messages: [{ role: 'user', content: userMsg }],
         temperature: 0.8,
         max_tokens: 800,
