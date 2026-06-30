@@ -17,6 +17,9 @@ export const translations = {
     voteNextSub: 'Pick what we build',
     playNow: 'Play now',
     changeNickname: 'Change nickname',
+    takePhoto: 'Take a photo',
+    choosePhoto: 'Choose from gallery',
+    removePhoto: 'Remove photo',
     save: 'Save',
     cancel: 'Cancel',
 
@@ -180,6 +183,9 @@ export const translations = {
     voteNextSub: 'Vælg hvad vi bygger',
     playNow: 'Spil nu',
     changeNickname: 'Skift kaldenavn',
+    takePhoto: 'Tag et billede',
+    choosePhoto: 'Vælg fra galleri',
+    removePhoto: 'Fjern billede',
     save: 'Gem',
     cancel: 'Annuller',
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useProfilePhoto } from './hooks/useProfilePhoto.js'
 import NicknameScreen from './screens/NicknameScreen.jsx'
 import GameLobby from './screens/GameLobby.jsx'
 import ModeSelect from './screens/ModeSelect.jsx'
@@ -104,6 +105,7 @@ export default function App() {
 
   // Party state
   const { lang } = useLang()
+  const { photo } = useProfilePhoto()
   // Scoring state
   const [votes, setVotes] = useState({})
   const [currentVoterIndex, setCurrentVoterIndex] = useState(0)

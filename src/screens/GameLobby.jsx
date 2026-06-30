@@ -1,13 +1,28 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
+import { useProfilePhoto } from '../hooks/useProfilePhoto.js'
+import Avatar from '../components/Avatar.jsx'
 import styles from './GameLobby.module.css'
 
 export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
   const { t, lang, toggleLang } = useLang()
+  const { photo, pickPhoto, removePhoto } = useProfilePhoto()
   const [activeTab, setActiveTab] = useState('home')
   const [showRename, setShowRename] = useState(false)
+  const [showPhotoMenu, setShowPhotoMenu] = useState(false)
+  const fileInputRef = useRef(null)
   const availableGames = games.filter(g => g.status === 'available')
   const readyCount = availableGames.length
+
+  function handleAvatarClick() {
+    setShowPhotoMenu(true)
+  }
+
+  function handleFileChange(e) {
+    pickPhoto(e.target.files?.[0])
+    setShowPhotoMenu(false)
+    e.target.value = ''
+  }
 
   return (
     <div className={styles.screen}>
@@ -26,10 +41,12 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
             <div className={styles.greeting}>{t.greeting} {user.name}</div>
             <div className={styles.headline}>{t.headline}</div>
           </div>
-          <button className={styles.avatar} onClick={() => setShowRename(true)}>
-            {user.initial}
-            <span className={styles.avatarEdit}>✏️</span>
-          </button>
+
+          {/* Avatar med edit-ring */}
+          <div className={styles.avatarWrap} onClick={handleAvatarClick}>
+            <Avatar photo={photo} name={user.name} size="md" />
+            <div className={styles.editBadge}>✏️</div>
+          </div>
         </div>
 
         {/* Section label */}
@@ -38,12 +55,10 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
           <span className={styles.countPill}>{readyCount} {t.ready}</span>
         </div>
 
-        {/* Available game cards */}
         {availableGames.map(game => (
           <GameCard key={game.id} game={game} onPlay={() => onPlay(game)} t={t} />
         ))}
 
-        {/* Coming soon */}
         <div className={styles.comingSoonRow}>
           <div className={styles.comingSoonCard}>
             <div className={styles.comingSoonIcon}>+</div>
@@ -57,7 +72,6 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
           </div>
         </div>
 
-        {/* Bottom nav */}
         <nav className={styles.bottomNav}>
           <button className={`${styles.navItem} ${activeTab === 'home' ? styles.navActive : ''}`} onClick={() => setActiveTab('home')}>◉</button>
           <button className={`${styles.navItem} ${activeTab === 'leaderboard' ? styles.navActive : ''}`} onClick={() => setActiveTab('leaderboard')}>★</button>
@@ -66,11 +80,66 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
         </nav>
       </div>
 
+      {/* Skjult fil-input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        capture="user"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+
+      {/* Foto menu */}
+      {showPhotoMenu && (
+        <div className={styles.menuOverlay} onClick={() => setShowPhotoMenu(false)}>
+          <div className={styles.menu} onClick={e => e.stopPropagation()}>
+            <div className={styles.menuHeader}>
+              <Avatar photo={photo} name={user.name} size="lg" />
+              <div className={styles.menuName}>{user.name}</div>
+            </div>
+
+            <button className={styles.menuBtn} onClick={() => {
+              fileInputRef.current.removeAttribute('capture')
+              fileInputRef.current.click()
+              setShowPhotoMenu(false)
+            }}>
+              🖼️ {t.choosePhoto}
+            </button>
+
+            <button className={styles.menuBtn} onClick={() => {
+              fileInputRef.current.setAttribute('capture', 'user')
+              fileInputRef.current.click()
+              setShowPhotoMenu(false)
+            }}>
+              📷 {t.takePhoto}
+            </button>
+
+            <button className={styles.menuBtn} onClick={() => setShowRename(true)}>
+              ✏️ {t.changeNickname}
+            </button>
+
+            {photo && (
+              <button className={`${styles.menuBtn} ${styles.menuBtnDanger}`} onClick={() => {
+                removePhoto()
+                setShowPhotoMenu(false)
+              }}>
+                🗑️ {t.removePhoto}
+              </button>
+            )}
+
+            <button className={styles.menuCancel} onClick={() => setShowPhotoMenu(false)}>
+              {t.cancel}
+            </button>
+          </div>
+        </div>
+      )}
+
       {showRename && (
         <RenameModal
           current={user.name}
           t={t}
-          onSave={(name) => { onChangeNickname(name); setShowRename(false) }}
+          onSave={(name) => { onChangeNickname(name); setShowRename(false); setShowPhotoMenu(false) }}
           onClose={() => setShowRename(false)}
         />
       )}
@@ -80,29 +149,19 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
 
 function RenameModal({ current, t, onSave, onClose }) {
   const [value, setValue] = useState(current)
-
   function handleSubmit(e) {
     e.preventDefault()
     const trimmed = value.trim()
     if (!trimmed) return
     onSave(trimmed)
   }
-
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
         <div className={styles.modalTitle}>{t.changeNickname}</div>
         <form onSubmit={handleSubmit}>
-          <input
-            className={styles.modalInput}
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            maxLength={20}
-            autoFocus
-          />
-          <button className={styles.modalBtn} type="submit" disabled={!value.trim()}>
-            {t.save}
-          </button>
+          <input className={styles.modalInput} value={value} onChange={e => setValue(e.target.value)} maxLength={20} autoFocus />
+          <button className={styles.modalBtn} type="submit" disabled={!value.trim()}>{t.save}</button>
         </form>
         <button className={styles.modalCancel} onClick={onClose}>{t.cancel}</button>
       </div>
@@ -112,7 +171,6 @@ function RenameModal({ current, t, onSave, onClose }) {
 
 function GameCard({ game, onPlay, t }) {
   const [pressed, setPressed] = useState(false)
-
   return (
     <div className={styles.gameCard}>
       <div className={styles.cardTop}>

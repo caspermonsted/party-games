@@ -1,15 +1,18 @@
 import { useLang } from '../lang/LanguageContext.jsx'
+import { useProfilePhoto } from '../hooks/useProfilePhoto.js'
+import Avatar from '../components/Avatar.jsx'
 import styles from './MyWord.module.css'
 
 export default function MyWord({ playerName, word, isImposter, onDone }) {
   const { t } = useLang()
+  const { photo } = useProfilePhoto()
   return (
     <div className={styles.screen}>
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
       <div className={styles.content}>
         <div className={styles.nameTag}>
-          <span className={styles.nameInitial}>{playerName[0].toUpperCase()}</span>
+          <Avatar photo={photo} name={playerName} size="sm" />
           <span className={styles.nameText}>{playerName}</span>
         </div>
         {isImposter ? (

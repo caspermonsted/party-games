@@ -81,35 +81,22 @@
   line-height: 1.05;
 }
 
-.avatar {
+.avatarWrap {
   position: relative;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #fbbf24, #f472b6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: #fff;
-  font-size: 18px;
-  box-shadow: 0 6px 16px rgba(244, 114, 182, 0.5);
   flex-shrink: 0;
-  border: none;
   cursor: pointer;
+  box-shadow: 0 6px 16px rgba(244, 114, 182, 0.5);
+  border-radius: 50%;
   transition: transform 120ms ease-out;
-  font-family: 'Fredoka', sans-serif;
 }
+.avatarWrap:hover { transform: scale(1.08); }
+.avatarWrap:active { transform: scale(0.95); }
 
-.avatar:hover {
-  transform: scale(1.08);
-}
-
-.avatarEdit {
+.editBadge {
   position: absolute;
-  bottom: -4px;
-  right: -4px;
-  font-size: 13px;
+  bottom: -3px;
+  right: -3px;
+  font-size: 12px;
   background: #1a0b2e;
   border-radius: 50%;
   width: 20px;
@@ -117,6 +104,72 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 2px solid #7c3aed;
+}
+
+/* Photo menu */
+.menuOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: flex-end;
+  z-index: 100;
+}
+
+.menu {
+  width: 100%;
+  background: #1a0b2e;
+  border-radius: 28px 28px 0 0;
+  padding: 24px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menuHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.menuName {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.menuBtn {
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  border-radius: 16px;
+  padding: 14px 20px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: background 120ms;
+}
+.menuBtn:hover { background: rgba(255,255,255,0.14); }
+
+.menuBtnDanger { color: #f472b6; }
+
+.menuCancel {
+  background: none;
+  border: none;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #8b7aa8;
+  cursor: pointer;
+  text-align: center;
+  padding: 8px;
+  margin-top: 4px;
 }
 
 /* Rename modal */
