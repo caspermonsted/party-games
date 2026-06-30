@@ -21,7 +21,7 @@ app.get('/health', (_req, res) => res.json({ ok: true }))
 app.post('/api/generate-category', async (req, res) => {
   const { category, lang } = req.body
   if (!category) return res.status(400).json({ error: 'category required' })
-  if (!process.env.ANTHROPIC_API_KEY) return res.status(500).json({ error: 'AI not configured' })
+  if (!process.env.ANTHROPIC_API_KEY) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set on server' })
 
   const isDA = lang === 'da'
 
@@ -53,7 +53,7 @@ Reply ONLY with a JSON array, no explanation:
 
   try {
     const message = await anthropic.messages.create({
-      model: 'claude-haiku-4-5',
+      model: 'claude-3-5-haiku-20241022',
       max_tokens: 1024,
       messages: [{ role: 'user', content: prompt }],
     })
