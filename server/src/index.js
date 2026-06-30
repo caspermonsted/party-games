@@ -14,6 +14,29 @@ const clientDist = join(__dirname, '../../dist')
 app.use(express.json())
 app.get('/health', (_req, res) => res.json({ ok: true }))
 
+// Test Grok API key
+app.get('/api/test-ai', async (req, res) => {
+  const apiKey = process.env.GROK_API_KEY
+  if (!apiKey) return res.json({ ok: false, error: 'GROK_API_KEY not set on server' })
+  try {
+    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: 'grok-beta',
+        messages: [{ role: 'user', content: 'Reply with just the word: OK' }],
+        max_tokens: 10,
+      }),
+      signal: AbortSignal.timeout(10000),
+    })
+    const data = await response.json()
+    if (!response.ok) return res.json({ ok: false, status: response.status, error: JSON.stringify(data) })
+    res.json({ ok: true, reply: data.choices?.[0]?.message?.content })
+  } catch (e) {
+    res.json({ ok: false, error: e.message })
+  }
+})
+
 // ─── AI kategori-generator (Groq) ────────────────────────────
 app.post('/api/generate-category', async (req, res) => {
   const { category, lang } = req.body
@@ -36,7 +59,7 @@ app.post('/api/generate-category', async (req, res) => {
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'grok-3-fast-beta',
+        model: 'grok-beta',
         messages: [{ role: 'user', content: userMsg }],
         temperature: 0.8,
         max_tokens: 800,
