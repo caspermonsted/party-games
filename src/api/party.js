@@ -38,11 +38,11 @@ export async function joinParty(code, playerName) {
   return data // { code, players }
 }
 
-export async function startParty(code, word, imposterIndex, categories) {
+export async function startParty(code, word, imposterIndex, categories, starterIndex) {
   await fetch(`${BASE}/party/${code}/start`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ word, imposterIndex, categories }),
+    body: JSON.stringify({ word, imposterIndex, categories, starterIndex }),
   })
 }
 

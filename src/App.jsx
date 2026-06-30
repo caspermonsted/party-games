@@ -113,6 +113,7 @@ export default function App() {
   const [roundPoints, setRoundPoints] = useState({})
   const [totalScores, setTotalScores] = useState({})
   const [imposterCaughtState, setImposterCaughtState] = useState(false)
+  const [starterIndex, setStarterIndex] = useState(0)
 
   const [partyCode, setPartyCode] = useState(null)
   const [isHost, setIsHost] = useState(false)
@@ -226,6 +227,7 @@ export default function App() {
             setGameWord(msg.word)
             setImposterIndex(msg.imposterIndex)
             setMyImposterIndex(myIndex === msg.imposterIndex)
+            setStarterIndex(msg.starterIndex ?? 0)
             setScreen('myword')
           }
         }}
@@ -245,12 +247,14 @@ export default function App() {
             const party = await import('./api/party.js').then(m => m.getParty(partyCode))
             const playerNames = party.players.map(p => p.name)
             const imposter = pickImposter(playerNames)
-            await startParty(partyCode, word, imposter, categories)
+            const starter = Math.floor(Math.random() * playerNames.length)
+            await startParty(partyCode, word, imposter, categories, starter)
             const myIndex = playerNames.findIndex(n => n === nickname)
             setPlayers(playerNames)
             setGameWord(word)
             setImposterIndex(imposter)
             setMyImposterIndex(myIndex === imposter)
+            setStarterIndex(starter)
             setScreen('myword')
           } else {
             setScreen('playersetup')
@@ -268,9 +272,11 @@ export default function App() {
         onDone={(playerList) => {
           const word = pickWord(selectedCategories, lang, customWords)
           const imposter = pickImposter(playerList)
+          const starter = Math.floor(Math.random() * playerList.length)
           setPlayers(playerList)
           setGameWord(word)
           setImposterIndex(imposter)
+          setStarterIndex(starter)
           setScreen('wordreveal')
         }}
       />
@@ -292,6 +298,7 @@ export default function App() {
     return (
       <GameOn
         players={players}
+        starterIndex={starterIndex}
         onStartVoting={() => {
           setVotes({})
           setCurrentVoterIndex(0)

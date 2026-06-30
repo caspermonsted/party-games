@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './GameOn.module.css'
 
-export default function GameOn({ players, onStartVoting }) {
+export default function GameOn({ players, starterIndex, onStartVoting }) {
   const { t } = useLang()
-  const [starter] = useState(() => players[Math.floor(Math.random() * players.length)])
+  const starter = players[starterIndex ?? Math.floor(Math.random() * players.length)]
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {

@@ -23,7 +23,7 @@ export default function WaitingRoom({ playerName, code, isHost, onGameStart, onB
       setPlayers(party.players)
       if (party.status === 'playing') {
         clearInterval(pollRef.current)
-        onGameStart({ players: party.players, word: party.word, imposterIndex: party.imposterIndex })
+        onGameStart({ players: party.players, word: party.word, imposterIndex: party.imposterIndex, starterIndex: party.starterIndex ?? 0 })
       }
     }
     poll()

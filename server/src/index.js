@@ -129,6 +129,7 @@ app.get('/api/party/:code', (req, res) => {
     status: party.status,
     word: party.word,
     imposterIndex: party.imposterIndex,
+    starterIndex: party.starterIndex ?? 0,
     categories: party.categories,
     votes: party.votes || {},
   })
@@ -168,15 +169,16 @@ app.post('/api/party/:code/join', (req, res) => {
   res.json({ code: party.code, players: party.players })
 })
 
-// Start game (host sends word + imposter)
+// Start game (host sends word + imposter + starter)
 app.post('/api/party/:code/start', (req, res) => {
   const party = parties.get(req.params.code.toUpperCase())
   if (!party) return res.status(404).json({ error: 'Party not found' })
-  const { word, imposterIndex, categories } = req.body
+  const { word, imposterIndex, categories, starterIndex } = req.body
   party.status = 'playing'
   party.word = word
   party.imposterIndex = imposterIndex
   party.categories = categories
+  party.starterIndex = starterIndex ?? 0
   res.json({ ok: true })
 })
 
