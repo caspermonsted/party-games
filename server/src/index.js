@@ -3,6 +3,9 @@ import { createServer } from 'http'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { existsSync } from 'fs'
+import Anthropic from '@anthropic-ai/sdk'
+
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 const app = express()
 const server = createServer(app)
@@ -13,6 +16,61 @@ const clientDist = join(__dirname, '../../dist')
 
 app.use(express.json())
 app.get('/health', (_req, res) => res.json({ ok: true }))
+
+// ─── AI kategori-generator ────────────────────────────────────
+app.post('/api/generate-category', async (req, res) => {
+  const { category, lang } = req.body
+  if (!category) return res.status(400).json({ error: 'category required' })
+  if (!process.env.ANTHROPIC_API_KEY) return res.status(500).json({ error: 'AI not configured' })
+
+  const isDA = lang === 'da'
+
+  const prompt = isDA
+    ? `Du er hjælper til et partyspil kaldet Imposter Game. Spillerne får et ord fra en kategori. Én spiller er imposteren og får i stedet et enkelt hint-ord der er INDIREKTE relateret til det rigtige ord — svært nok til at det ikke er åbenlyst, men nok til at imposteren kan blende ind.
+
+Generer 10 ord til kategorien: "${category}"
+
+Regler for hints:
+- Hintet skal være ét enkelt ord
+- Hintet må IKKE være selve ordet eller et direkte synonym
+- Hintet skal være noget man associerer med ordet, men som er én grad fjernet
+- Eks: ord="Pizza" hint="Skærer" (ikke "Tomat" eller "Ost")
+
+Svar KUN med et JSON-array, ingen forklaring:
+[{"word":"...","hint":"..."},...]`
+    : `You are a helper for a party game called Imposter Game. Players get a word from a category. One player is the imposter and gets a single hint word that is INDIRECTLY related to the real word — tricky enough not to be obvious, but enough to blend in.
+
+Generate 10 words for the category: "${category}"
+
+Rules for hints:
+- The hint must be a single word
+- The hint must NOT be the word itself or a direct synonym
+- The hint should be something associated with the word, but one step removed
+- E.g.: word="Pizza" hint="Cutter" (not "Tomato" or "Cheese")
+
+Reply ONLY with a JSON array, no explanation:
+[{"word":"...","hint":"..."},...]`
+
+  try {
+    const message = await anthropic.messages.create({
+      model: 'claude-haiku-4-5',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: prompt }],
+    })
+
+    const text = message.content[0].text.trim()
+    const jsonMatch = text.match(/\[[\s\S]*\]/)
+    if (!jsonMatch) throw new Error('No JSON array in response')
+
+    const words = JSON.parse(jsonMatch[0])
+    if (!Array.isArray(words) || words.length === 0) throw new Error('Invalid word list')
+
+    res.json({ words, category })
+  } catch (e) {
+    console.error('[AI] generate-category error:', e)
+    res.status(500).json({ error: 'Failed to generate words. Try again.' })
+  }
+})
 
 // ─── Party store ─────────────────────────────────────────────
 const parties = new Map()

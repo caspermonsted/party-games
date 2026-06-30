@@ -1,5 +1,16 @@
 const BASE = '/api'
 
+export async function generateCategory(category, lang) {
+  const res = await fetch(`${BASE}/generate-category`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ category, lang }),
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.error || 'Failed to generate')
+  return data // { words: [{word, hint}], category }
+}
+
 export async function createParty(hostName) {
   const res = await fetch(`${BASE}/party`, {
     method: 'POST',

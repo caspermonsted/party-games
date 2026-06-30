@@ -172,6 +172,105 @@
   background: rgba(244,114,182,0.32);
 }
 
+/* Custom kategori chip */
+.chipCustom {
+  border: 1.5px solid rgba(34,211,238,0.3);
+}
+.removeCustomBtn {
+  position: absolute;
+  top: 6px; right: 6px;
+  background: rgba(244,114,182,0.25);
+  border: none; border-radius: 50%;
+  width: 18px; height: 18px;
+  font-size: 10px; color: #f472b6;
+  cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  line-height: 1;
+}
+
+/* Custom kategori boks */
+.customBox {
+  width: 100%;
+  background: rgba(255,255,255,0.1);
+  border: 1.5px solid rgba(34,211,238,0.3);
+  border-radius: 24px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.customTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.customSub {
+  font-size: 13px;
+  color: #c9b6e8;
+  margin-top: -4px;
+}
+
+.customForm {
+  display: flex;
+  gap: 8px;
+}
+
+.customInput {
+  flex: 1;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a0b2e;
+  background: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 11px 14px;
+  outline: none;
+}
+.customInput::placeholder { color: #c4b5d4; }
+.customInput:disabled { opacity: 0.6; }
+
+.customBtn {
+  width: 46px; height: 46px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #22d3ee, #a855f7);
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: transform 120ms, opacity 120ms;
+}
+.customBtn:disabled { opacity: 0.4; cursor: default; }
+.customBtn:not(:disabled):active { transform: scale(0.93); }
+
+.genSpinner {
+  width: 20px; height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.genLoading {
+  font-size: 13px;
+  color: #22d3ee;
+  text-align: center;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
+
+.genError {
+  font-size: 13px;
+  color: #f472b6;
+  background: rgba(244,114,182,0.15);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
 .startBtn {
   width: 100%;
   font-family: 'Fredoka', sans-serif;

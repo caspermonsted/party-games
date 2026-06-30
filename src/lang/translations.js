@@ -75,6 +75,11 @@ export const translations = {
     selectAll: 'Select all',
     removeAll: 'Remove all',
     startGameBtn: 'Start game 🎉',
+    customCategoryTitle: 'Create your own category',
+    customCategorySub: 'Type a category and AI generates the words',
+    customCategoryPlaceholder: 'e.g. Superheroes, Cars, 90s things...',
+    generatingWords: 'AI is generating words...',
+    genError: 'Could not generate words. Try again.',
 
     // Categories
     catFamous: 'Famous people',
@@ -241,6 +246,11 @@ export const translations = {
     selectAll: 'Vælg alle',
     removeAll: 'Fjern alle',
     startGameBtn: 'Start spillet 🎉',
+    customCategoryTitle: 'Lav din egen kategori',
+    customCategorySub: 'Skriv en kategori, og AI finder på ordene',
+    customCategoryPlaceholder: 'f.eks. Superhelte, Biler, 90\'er ting...',
+    generatingWords: 'AI genererer ord...',
+    genError: 'Kunne ikke generere ord. Prøv igen.',
 
     // Categories
     catFamous: 'Berømte personer',

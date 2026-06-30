@@ -292,9 +292,11 @@ const WORDS_DA = {
   ],
 }
 
-export function pickWord(categories, lang = 'en') {
+export function pickWord(categories, lang = 'en', customWords = {}) {
   const wordSet = lang === 'da' ? WORDS_DA : WORDS_EN
-  const pool = categories.flatMap(cat => wordSet[cat] || [])
+  const pool = categories.flatMap(cat =>
+    customWords[cat] ? customWords[cat] : (wordSet[cat] || [])
+  )
   if (pool.length === 0) return { word: '???', hint: '???' }
   return pool[Math.floor(Math.random() * pool.length)]
 }

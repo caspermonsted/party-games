@@ -99,6 +99,7 @@ export default function App() {
   const [selectedGame, setSelectedGame] = useState(null)
   const [selectedMode, setSelectedMode] = useState(null)
   const [selectedCategories, setSelectedCategories] = useState([])
+  const [customWords, setCustomWords] = useState({})
   const [players, setPlayers] = useState([])
   const [gameWord, setGameWord] = useState(null)
   const [imposterIndex, setImposterIndex] = useState(null)
@@ -236,10 +237,11 @@ export default function App() {
     return (
       <CategorySelect
         onBack={() => selectedMode === 'multi' ? setScreen('waitingroom') : setScreen('modeselect')}
-        onDone={async (categories) => {
+        onDone={async (categories, newCustomWords = {}) => {
           setSelectedCategories(categories)
+          setCustomWords(newCustomWords)
           if (selectedMode === 'multi') {
-            const word = pickWord(categories, lang)
+            const word = pickWord(categories, lang, newCustomWords)
             const party = await import('./api/party.js').then(m => m.getParty(partyCode))
             const playerNames = party.players.map(p => p.name)
             const imposter = pickImposter(playerNames)
@@ -264,7 +266,7 @@ export default function App() {
         hostName={nickname}
         onBack={() => setScreen('categoryselect')}
         onDone={(playerList) => {
-          const word = pickWord(selectedCategories, lang)
+          const word = pickWord(selectedCategories, lang, customWords)
           const imposter = pickImposter(playerList)
           setPlayers(playerList)
           setGameWord(word)
