@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './ImposterGuess.module.css'
 
-export default function ImposterGuess({ imposterName, word, onResult }) {
+export default function ImposterGuess({ imposterName, word, onResult, onGuessSubmit }) {
   const { t } = useLang()
   const [guess, setGuess] = useState('')
   const [revealed, setRevealed] = useState(false)
@@ -13,6 +13,7 @@ export default function ImposterGuess({ imposterName, word, onResult }) {
     const isCorrect = guess.trim().toLowerCase() === word.word.toLowerCase()
     setCorrect(isCorrect)
     setRevealed(true)
+    if (onGuessSubmit) onGuessSubmit(guess.trim())
   }
 
   return (

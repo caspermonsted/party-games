@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './GameOn.module.css'
 
-export default function GameOn({ players, starterIndex, onStartVoting }) {
+export default function GameOn({ players, starterIndex, onStartVoting = null }) {
   const { t } = useLang()
   const starter = players[starterIndex ?? Math.floor(Math.random() * players.length)]
   const [visible, setVisible] = useState(false)
@@ -24,9 +24,13 @@ export default function GameOn({ players, starterIndex, onStartVoting }) {
         <div className={styles.starterLabel}>{t.startingPlayer}</div>
         <div className={styles.starterName}>{starter}</div>
         <div className={styles.starterSub}>{t.gameOnSub}</div>
-        <button className={styles.votingBtn} onClick={onStartVoting}>
-          {t.startVoting}
-        </button>
+        {onStartVoting ? (
+          <button className={styles.votingBtn} onClick={onStartVoting}>
+            {t.startVoting}
+          </button>
+        ) : (
+          <div className={styles.waitingMsg}>{t.waitingHost}</div>
+        )}
       </div>
     </div>
   )

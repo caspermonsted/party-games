@@ -168,6 +168,9 @@ export const translations = {
     gameOnSub: "Talk about the word — without saying it!",
     letsGoBtn: 'Let\'s go →',
     startVoting: 'Start voting 🗳️',
+    waitingVotes: 'Waiting for all votes...',
+    waitingImposterGuess: 'Waiting for the imposter to guess...',
+    waitingHost: 'Waiting for host to start voting...',
   },
 
   da: {
@@ -339,5 +342,8 @@ export const translations = {
     gameOnSub: 'Tal om ordet — uden at sige det!',
     letsGoBtn: 'Afsted →',
     startVoting: 'Start afstemning 🗳️',
+    waitingVotes: 'Venter på alle stemmer...',
+    waitingImposterGuess: 'Venter på at imposteren gætter...',
+    waitingHost: 'Venter på at hosten starter afstemning...',
   },
 }

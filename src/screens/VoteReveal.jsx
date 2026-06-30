@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './VoteReveal.module.css'
 
-export default function VoteReveal({ players, votes, imposterIndex, word, onContinue }) {
+export default function VoteReveal({ players, votes, imposterIndex, word, onContinue, showContinue = true }) {
   const { t } = useLang()
   const [visible, setVisible] = useState(false)
   const imposterName = players[imposterIndex]
@@ -58,9 +58,11 @@ export default function VoteReveal({ players, votes, imposterIndex, word, onCont
           ))}
         </div>
 
-        <button className={styles.continueBtn} onClick={() => onContinue(imposterCaught)}>
-          {imposterCaught ? t.letImposterGuess : t.seeResults}
-        </button>
+        {showContinue && (
+          <button className={styles.continueBtn} onClick={() => onContinue(imposterCaught)}>
+            {imposterCaught ? t.letImposterGuess : t.seeResults}
+          </button>
+        )}
       </div>
     </div>
   )

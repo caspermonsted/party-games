@@ -11,6 +11,7 @@ import PlayerSetup from './screens/PlayerSetup.jsx'
 import WordReveal from './screens/WordReveal.jsx'
 import MyWord from './screens/MyWord.jsx'
 import GameOn from './screens/GameOn.jsx'
+import MultiGameController from './screens/MultiGameController.jsx'
 import { CastVoteSamePhone, CastVoteMulti } from './screens/CastVote.jsx'
 import VoteReveal from './screens/VoteReveal.jsx'
 import ImposterGuess from './screens/ImposterGuess.jsx'
@@ -289,7 +290,21 @@ export default function App() {
         playerName={nickname}
         word={gameWord}
         isImposter={myImposterIndex}
-        onDone={() => setScreen('gameon')}
+        onDone={() => setScreen(selectedMode === 'multi' ? 'multi-game' : 'gameon')}
+      />
+    )
+  }
+
+  // Multi-phone: alt styres af MultiGameController
+  if (screen === 'multi-game') {
+    return (
+      <MultiGameController
+        playerName={nickname}
+        partyCode={partyCode}
+        isHost={isHost}
+        initialParty={{ players: players.map(n => ({ name: n, isHost: n === players[0] })), word: gameWord, imposterIndex, starterIndex, phase: 'gameon', votes: {}, scores: {}, roundPoints: {} }}
+        onPlayAgain={() => setScreen('categoryselect')}
+        onEndGame={() => { clearScores(); setScreen('lobby') }}
       />
     )
   }
@@ -302,7 +317,7 @@ export default function App() {
         onStartVoting={() => {
           setVotes({})
           setCurrentVoterIndex(0)
-          setScreen(selectedMode === 'multi' ? 'vote-multi' : 'vote-same')
+          setScreen('vote-same')
         }}
       />
     )
