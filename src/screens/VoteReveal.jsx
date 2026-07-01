@@ -3,7 +3,7 @@ import { useLang } from '../lang/LanguageContext.jsx'
 import Avatar from '../components/Avatar.jsx'
 import styles from './VoteReveal.module.css'
 
-export default function VoteReveal({ players, votes, imposterIndex, word, onContinue, showContinue = true, photoMap = {} }) {
+export default function VoteReveal({ players, votes, imposterIndex, word, onContinue, showContinue = true, photoMap = {}, onBack }) {
   const { t } = useLang()
   const [visible, setVisible] = useState(false)
   const imposterName = players[imposterIndex]
@@ -27,6 +27,7 @@ export default function VoteReveal({ players, votes, imposterIndex, word, onCont
     <div className={styles.screen}>
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
+      {onBack && <button className={styles.backBtn} onClick={onBack}>{t.back}</button>}
       <div className={`${styles.content} ${visible ? styles.visible : ''}`}>
 
         <div className={styles.resultBadge}>

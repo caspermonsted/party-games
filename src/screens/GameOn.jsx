@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './GameOn.module.css'
 
-export default function GameOn({ players, starterIndex, onStartVoting = null }) {
+export default function GameOn({ players, starterIndex, onStartVoting = null, onBack = null }) {
   const { t } = useLang()
   const starter = players[starterIndex ?? Math.floor(Math.random() * players.length)]
   const [visible, setVisible] = useState(false)
@@ -16,6 +16,7 @@ export default function GameOn({ players, starterIndex, onStartVoting = null }) 
     <div className={styles.screen}>
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
+      {onBack && <button className={styles.backBtn} onClick={onBack}>{t.back}</button>}
       <div className={`${styles.content} ${visible ? styles.visible : ''}`}>
         <div className={styles.badge}>🕵️</div>
         <div className={styles.gameOn}>{t.gameOn}</div>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './RoundResults.module.css'
 
-export default function RoundResults({ roundPoints, totalScores, imposterName, imposterCaught, onContinue }) {
+export default function RoundResults({ roundPoints, totalScores, imposterName, imposterCaught, onContinue, onBack }) {
   const { t } = useLang()
   const [visible, setVisible] = useState(false)
   useEffect(() => { setTimeout(() => setVisible(true), 100) }, [])
@@ -13,6 +13,7 @@ export default function RoundResults({ roundPoints, totalScores, imposterName, i
     <div className={styles.screen}>
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
+      {onBack && <button className={styles.backBtn} onClick={onBack}>{t.back}</button>}
       <div className={`${styles.content} ${visible ? styles.visible : ''}`}>
         <div className={styles.title}>{t.roundResults}</div>
         <div className={styles.sub}>

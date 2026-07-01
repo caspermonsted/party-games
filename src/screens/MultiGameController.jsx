@@ -86,6 +86,7 @@ export default function MultiGameController({
         players={players}
         starterIndex={party.starterIndex ?? starterIndex ?? 0}
         onStartVoting={isHost ? () => setPhase('voting') : null}
+        onBack={onEndGame}
       />
     )
   }
@@ -116,6 +117,7 @@ export default function MultiGameController({
         word={gameWord}
         showContinue={isHost}
         photoMap={photoMap}
+        onBack={onEndGame}
         onContinue={(caught) => {
           if (caught) setPhase('imposter_guessing')
           else handleFinish()
@@ -133,6 +135,7 @@ export default function MultiGameController({
           word={gameWord}
           onResult={() => {}}
           onGuessSubmit={handleGuess}
+          onBack={onEndGame}
         />
       )
     }
@@ -158,6 +161,7 @@ export default function MultiGameController({
         imposterName={imposterName}
         imposterCaught={party.imposterCaught || false}
         onContinue={() => setShowLeaderboard(true)}
+        onBack={onEndGame}
       />
     )
   }

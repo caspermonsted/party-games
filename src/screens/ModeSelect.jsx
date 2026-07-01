@@ -13,7 +13,7 @@ export default function ModeSelect({ game, onBack, onSelect }) {
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
       <div className={styles.content}>
-        <button className={styles.backBtn} onClick={onBack}>← Back</button>
+        <button className={styles.backBtn} onClick={onBack}>{t.back}</button>
         <div className={styles.logoBadge}>{game.icon}</div>
         <h1 className={styles.title}>{game.title}</h1>
         <p className={styles.sub}>{t.howPlaying}</p>

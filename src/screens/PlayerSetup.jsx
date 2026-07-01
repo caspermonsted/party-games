@@ -54,7 +54,7 @@ export default function PlayerSetup({ hostName, onBack, onDone }) {
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
       <div className={styles.content}>
-        <button className={styles.backBtn} onClick={onBack}>← Back</button>
+        <button className={styles.backBtn} onClick={onBack}>{t.back}</button>
         <h1 className={styles.title}>{t.whosPlaying}</h1>
         <p className={styles.sub}>{t.addAtLeast}</p>
         <div className={styles.playerList}>

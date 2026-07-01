@@ -77,7 +77,7 @@ export default function CategorySelect({ onBack, onDone }) {
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
       <div className={styles.content}>
-        <button className={styles.backBtn} onClick={onBack}>← Back</button>
+        <button className={styles.backBtn} onClick={onBack}>{t.back}</button>
         <h1 className={styles.title}>{t.pickCategories}</h1>
         <p className={styles.sub}>{t.chooseSub}</p>
 

@@ -291,6 +291,7 @@ export default function App() {
         word={gameWord}
         isImposter={myImposterIndex}
         onDone={() => setScreen(selectedMode === 'multi' ? 'multi-game' : 'gameon')}
+        onBack={() => setScreen('categoryselect')}
       />
     )
   }
@@ -319,6 +320,7 @@ export default function App() {
           setCurrentVoterIndex(0)
           setScreen('vote-same')
         }}
+        onBack={() => setScreen('lobby')}
       />
     )
   }
@@ -329,6 +331,7 @@ export default function App() {
       <CastVoteSamePhone
         players={players}
         currentVoterIndex={currentVoterIndex}
+        onBack={() => setScreen('gameon')}
         onVote={(voter, voted) => {
           const newVotes = { ...votes, [voter]: voted }
           setVotes(newVotes)
@@ -364,6 +367,7 @@ export default function App() {
         votes={votes}
         imposterIndex={imposterIndex}
         word={gameWord}
+        onBack={() => setScreen('lobby')}
         onContinue={(caught) => {
           setImposterCaughtState(caught)
           if (caught) {
@@ -382,6 +386,7 @@ export default function App() {
         imposterName={players[imposterIndex]}
         word={gameWord}
         onResult={(guessedCorrectly) => finishRound(guessedCorrectly)}
+        onBack={() => setScreen('votereveal')}
       />
     )
   }
@@ -394,6 +399,7 @@ export default function App() {
         imposterName={players[imposterIndex]}
         imposterCaught={imposterCaughtState}
         onContinue={() => setScreen('leaderboard')}
+        onBack={() => { clearScores(); setScreen('lobby') }}
       />
     )
   }
@@ -422,6 +428,7 @@ export default function App() {
         imposterIndex={imposterIndex}
         word={gameWord}
         onDone={() => setScreen('gameon')}
+        onBack={() => setScreen('playersetup')}
       />
     )
   }

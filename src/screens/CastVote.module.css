@@ -104,3 +104,22 @@
   40% { transform: scale(1); opacity: 1; }
 }
 .waitingText { font-size: 17px; font-weight: 500; color: #e9d5ff; }
+
+.backBtn {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  background: rgba(255,255,255,0.16);
+  border: none;
+  border-radius: 16px;
+  padding: 8px 16px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: background 120ms;
+}
+.backBtn:hover { background: rgba(255,255,255,0.24); }
+.backBtn:active { background: rgba(255,255,255,0.32); }

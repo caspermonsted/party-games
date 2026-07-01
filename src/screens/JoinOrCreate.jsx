@@ -11,7 +11,7 @@ export default function JoinOrCreate({ onBack, onCreate, onJoin }) {
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
       <div className={styles.content}>
-        <button className={styles.backBtn} onClick={onBack}>← Back</button>
+        <button className={styles.backBtn} onClick={onBack}>{t.back}</button>
         <div className={styles.emoji}>📲</div>
         <h1 className={styles.title}>{t.joinOrCreateTitle}</h1>
         <p className={styles.sub}>{t.joinOrCreateSub}</p>

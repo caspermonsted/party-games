@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './WordReveal.module.css'
 
-export default function WordReveal({ players, imposterIndex, word, onDone }) {
+export default function WordReveal({ players, imposterIndex, word, onDone, onBack }) {
   const { t } = useLang()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [phase, setPhase] = useState('pass')
@@ -20,6 +20,7 @@ export default function WordReveal({ players, imposterIndex, word, onDone }) {
     <div className={styles.screen}>
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
+      {onBack && <button className={styles.backBtn} onClick={onBack}>{t.back}</button>}
       <div className={styles.content}>
 
         {phase === 'pass' && (

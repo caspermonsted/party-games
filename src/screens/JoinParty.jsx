@@ -30,7 +30,7 @@ export default function JoinParty({ onBack, onSubmit, error, loading, initialCod
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
       <div className={styles.content}>
-        <button className={styles.backBtn} onClick={onBack}>← Back</button>
+        <button className={styles.backBtn} onClick={onBack}>{t.back}</button>
         <div className={styles.emoji}>🔑</div>
         <h1 className={styles.title}>{t.joinTitle}</h1>
         <button className={styles.scanBtn} onClick={() => setShowScanner(true)}>

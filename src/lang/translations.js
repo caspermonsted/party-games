@@ -1,5 +1,7 @@
 export const translations = {
   en: {
+    back: '← Back',
+
     // Nickname
     nicknameTitle: "What's your nickname?",
     nicknameSub: 'Your name will be shown to other players',
@@ -174,6 +176,8 @@ export const translations = {
   },
 
   da: {
+    back: '← Tilbage',
+
     // Nickname
     nicknameTitle: 'Hvad er dit kaldenavn?',
     nicknameSub: 'Dit navn vises til de andre spillere',

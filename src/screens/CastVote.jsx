@@ -4,7 +4,7 @@ import Avatar from '../components/Avatar.jsx'
 import styles from './CastVote.module.css'
 
 // Same-phone: én spiller ad gangen
-export function CastVoteSamePhone({ players, currentVoterIndex, onVote }) {
+export function CastVoteSamePhone({ players, currentVoterIndex, onVote, onBack }) {
   const { t } = useLang()
   const [phase, setPhase] = useState('pass') // pass | vote
   const [selected, setSelected] = useState(null)
@@ -22,6 +22,7 @@ export function CastVoteSamePhone({ players, currentVoterIndex, onVote }) {
     <div className={styles.screen}>
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
+      {onBack && phase === 'pass' && <button className={styles.backBtn} onClick={onBack}>{t.back}</button>}
       <div className={styles.content}>
         {phase === 'pass' ? (
           <div className={styles.passBox}>

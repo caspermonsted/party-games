@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
 import styles from './ImposterGuess.module.css'
 
-export default function ImposterGuess({ imposterName, word, onResult, onGuessSubmit }) {
+export default function ImposterGuess({ imposterName, word, onResult, onGuessSubmit, onBack }) {
   const { t } = useLang()
   const [guess, setGuess] = useState('')
   const [revealed, setRevealed] = useState(false)
@@ -20,6 +20,7 @@ export default function ImposterGuess({ imposterName, word, onResult, onGuessSub
     <div className={styles.screen}>
       <div className={styles.blobTop} />
       <div className={styles.blobBottom} />
+      {onBack && !revealed && <button className={styles.backBtn} onClick={onBack}>{t.back}</button>}
       <div className={styles.content}>
         <div className={styles.badge}>🕵️</div>
         <h1 className={styles.title}>{t.imposterGuessTitle}</h1>
