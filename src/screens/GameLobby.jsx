@@ -14,7 +14,7 @@ function getLastPartyScores() {
   } catch { return null }
 }
 
-export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
+export default function GameLobby({ user, games, onPlay, onChangeNickname, onLeaveParty }) {
   const { t, lang, toggleLang } = useLang()
   const { photo, pickPhoto, removePhoto } = useProfilePhoto()
   const [activeTab, setActiveTab] = useState('home')
@@ -103,6 +103,11 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
               </div>
             ) : (
               <div className={styles.noScores}>{t.noPartyScores}</div>
+            )}
+            {onLeaveParty && (
+              <button className={styles.leavePartyBtn} onClick={onLeaveParty}>
+                🚪 {t.leaveParty}
+              </button>
             )}
           </div>
         )}
