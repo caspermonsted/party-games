@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
+import Avatar from '../components/Avatar.jsx'
 import styles from './VoteReveal.module.css'
 
-export default function VoteReveal({ players, votes, imposterIndex, word, onContinue, showContinue = true }) {
+export default function VoteReveal({ players, votes, imposterIndex, word, onContinue, showContinue = true, photoMap = {} }) {
   const { t } = useLang()
   const [visible, setVisible] = useState(false)
   const imposterName = players[imposterIndex]
@@ -43,7 +44,7 @@ export default function VoteReveal({ players, votes, imposterIndex, word, onCont
         <div className={styles.voteList}>
           {sorted.map(name => (
             <div key={name} className={`${styles.voteRow} ${name === imposterName ? styles.voteRowImposter : ''}`}>
-              <div className={styles.voteAvatar}>{name[0].toUpperCase()}</div>
+              <Avatar photo={photoMap[name] || null} name={name} size="sm" />
               <div className={styles.voteName}>{name}</div>
               <div className={styles.voteBar}>
                 <div

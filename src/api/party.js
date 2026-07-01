@@ -1,11 +1,11 @@
 const BASE = '/api'
 
 
-export async function createParty(hostName) {
+export async function createParty(hostName, photo = null) {
   const res = await fetch(`${BASE}/party`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ hostName }),
+    body: JSON.stringify({ hostName, photo }),
   })
   if (!res.ok) throw new Error('Failed to create party')
   return res.json() // { code }
@@ -17,11 +17,11 @@ export async function getParty(code) {
   return res.json()
 }
 
-export async function joinParty(code, playerName) {
+export async function joinParty(code, playerName, photo = null) {
   const res = await fetch(`${BASE}/party/${code}/join`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ playerName }),
+    body: JSON.stringify({ playerName, photo }),
   })
   const data = await res.json()
   if (!res.ok) throw new Error(data.error || 'Failed to join')

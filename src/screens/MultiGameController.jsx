@@ -11,33 +11,26 @@ import styles from './MultiGameController.module.css'
 
 export default function MultiGameController({
   playerName, partyCode, isHost,
-  initialParty,   // { players, word, imposterIndex, starterIndex }
-  onPlayAgain,
-  onEndGame,
+  word, imposterIndex, starterIndex,
+  onPlayAgain, onEndGame,
 }) {
   const { t } = useLang()
-  const [party, setParty] = useState(initialParty)
+  const [party, setParty] = useState(null)
   const [voted, setVoted] = useState(false)
+  const [showLeaderboard, setShowLeaderboard] = useState(false)
   const pollRef = useRef(null)
 
-  const players = party.players?.map(p => p.name) || []
-  const myIndex = players.indexOf(playerName)
-  const isImposter = myIndex === party.imposterIndex
-
   useEffect(() => {
-    pollRef.current = setInterval(async () => {
+    async function poll() {
       const fresh = await getParty(partyCode)
       if (fresh) setParty(fresh)
-    }, 2000)
+    }
+    poll()
+    pollRef.current = setInterval(poll, 2000)
     return () => clearInterval(pollRef.current)
   }, [partyCode])
 
-  async function handleVote(voter, votedFor) {
-    await submitVote(partyCode, voter, votedFor)
-    setVoted(true)
-  }
-
-  async function handlePhase(phase) {
+  async function setPhase(phase) {
     await fetch(`/api/party/${partyCode}/phase`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -47,6 +40,11 @@ export default function MultiGameController({
     if (fresh) setParty(fresh)
   }
 
+  async function handleVote(voter, votedFor) {
+    await submitVote(partyCode, voter, votedFor)
+    setVoted(true)
+  }
+
   async function handleGuess(guess) {
     const res = await fetch(`/api/party/${partyCode}/guess`, {
       method: 'POST',
@@ -54,14 +52,7 @@ export default function MultiGameController({
       body: JSON.stringify({ guess }),
     })
     const data = await res.json()
-    setParty(prev => ({
-      ...prev,
-      imposterGuess: data.guess,
-      imposterGuessCorrect: data.correct,
-      roundPoints: data.roundPoints,
-      scores: data.scores,
-      phase: 'round_over',
-    }))
+    setParty(prev => ({ ...prev, ...data, phase: 'round_over' }))
   }
 
   async function handleFinish() {
@@ -70,69 +61,77 @@ export default function MultiGameController({
       headers: { 'Content-Type': 'application/json' },
     })
     const data = await res.json()
-    setParty(prev => ({ ...prev, roundPoints: data.roundPoints, scores: data.scores, phase: 'round_over' }))
+    setParty(prev => ({ ...prev, ...data, phase: 'round_over' }))
   }
 
-  const phase = party.phase || 'gameon'
-  const word = party.word
+  // Loading
+  if (!party) {
+    return <WaitingScreen text="Loading..." />
+  }
+
+  const players = party.players?.map(p => p.name) || []
+  const photoMap = Object.fromEntries((party.players || []).map(p => [p.name, p.photo || null]))
+  const myIndex = players.indexOf(playerName)
+  const isImposter = myIndex === (party.imposterIndex ?? imposterIndex)
+  const gameWord = party.word || word
   const votes = party.votes || {}
   const scores = party.scores || {}
   const roundPoints = party.roundPoints || {}
-  const imposterCaught = party.imposterCaught || false
+  const phase = party.phase || 'gameon'
 
-  // ── GAME ON ──
+  // GAME ON — diskussion
   if (phase === 'gameon') {
     return (
       <GameOn
         players={players}
-        starterIndex={party.starterIndex ?? 0}
-        onStartVoting={isHost ? () => handlePhase('voting') : null}
+        starterIndex={party.starterIndex ?? starterIndex ?? 0}
+        onStartVoting={isHost ? () => setPhase('voting') : null}
       />
     )
   }
 
-  // ── VOTING ──
+  // VOTING
   if (phase === 'voting') {
     if (voted) {
-      return <WaitingScreen text={t.waitingVotes} count={Object.keys(votes).length} total={players.length} />
+      const voteCount = Object.keys(votes).length
+      return <WaitingScreen text={t.waitingVotes} count={voteCount} total={players.length} />
     }
     return (
       <CastVoteMulti
         playerName={playerName}
         players={players}
         onVote={handleVote}
+        photoMap={photoMap}
       />
     )
   }
 
-  // ── VOTE REVEAL ──
+  // VOTE REVEAL
   if (phase === 'vote_reveal') {
     return (
       <VoteReveal
         players={players}
         votes={votes}
-        imposterIndex={party.imposterIndex}
-        word={word}
-        onContinue={(caught) => {
-          if (caught) {
-            handlePhase('imposter_guessing')
-          } else {
-            handleFinish()
-          }
-        }}
+        imposterIndex={party.imposterIndex ?? imposterIndex}
+        word={gameWord}
         showContinue={isHost}
+        photoMap={photoMap}
+        onContinue={(caught) => {
+          if (caught) setPhase('imposter_guessing')
+          else handleFinish()
+        }}
       />
     )
   }
 
-  // ── IMPOSTER GUESSING ──
+  // IMPOSTER GUESSING
   if (phase === 'imposter_guessing') {
     if (isImposter) {
       return (
         <ImposterGuess
           imposterName={playerName}
-          word={word}
-          onResult={(correct) => handleGuess(party.word?.word || '')}
+          word={gameWord}
+          onResult={() => {}}
           onGuessSubmit={handleGuess}
         />
       )
@@ -140,20 +139,25 @@ export default function MultiGameController({
     return <WaitingScreen text={t.waitingImposterGuess} />
   }
 
-  // ── ROUND OVER ──
+  // ROUND OVER
   if (phase === 'round_over') {
-    const imposterName = players[party.imposterIndex]
+    const imposterName = players[party.imposterIndex ?? imposterIndex]
+    if (showLeaderboard) {
+      return (
+        <Leaderboard
+          scores={scores}
+          onPlayAgain={onPlayAgain}
+          onEndGame={onEndGame}
+        />
+      )
+    }
     return (
-      <RoundResultsThenLeaderboard
+      <RoundResults
         roundPoints={roundPoints}
         totalScores={scores}
         imposterName={imposterName}
-        imposterCaught={imposterCaught}
-        imposterGuess={party.imposterGuess}
-        imposterGuessCorrect={party.imposterGuessCorrect}
-        word={word}
-        onPlayAgain={onPlayAgain}
-        onEndGame={onEndGame}
+        imposterCaught={party.imposterCaught || false}
+        onContinue={() => setShowLeaderboard(true)}
       />
     )
   }
@@ -172,29 +176,5 @@ function WaitingScreen({ text, count, total }) {
         <div className={styles.waitingCount}>{count} / {total}</div>
       )}
     </div>
-  )
-}
-
-function RoundResultsThenLeaderboard({ roundPoints, totalScores, imposterName, imposterCaught, imposterGuess, imposterGuessCorrect, word, onPlayAgain, onEndGame }) {
-  const [showLeaderboard, setShowLeaderboard] = useState(false)
-
-  if (showLeaderboard) {
-    return (
-      <Leaderboard
-        scores={totalScores}
-        onPlayAgain={onPlayAgain}
-        onEndGame={onEndGame}
-      />
-    )
-  }
-
-  return (
-    <RoundResults
-      roundPoints={roundPoints}
-      totalScores={totalScores}
-      imposterName={imposterName}
-      imposterCaught={imposterCaught}
-      onContinue={() => setShowLeaderboard(true)}
-    />
   )
 }

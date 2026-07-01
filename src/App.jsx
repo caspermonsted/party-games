@@ -173,7 +173,7 @@ export default function App() {
         onBack={() => setScreen('modeselect')}
         onCreate={async () => {
           try {
-            const { code } = await createParty(nickname)
+            const { code } = await createParty(nickname, photo)
             setPartyCode(code)
             setIsHost(true)
             setScreen('waitingroom')
@@ -197,7 +197,7 @@ export default function App() {
           setJoinError(null)
           setJoinLoading(true)
           try {
-            await joinParty(code, nickname)
+            await joinParty(code, nickname, photo)
             setPartyCode(code)
             setIsHost(false)
             setScreen('waitingroom')

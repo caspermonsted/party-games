@@ -134,12 +134,12 @@ function calcPoints(players, imposterIndex, votes, imposterGuessCorrect) {
 // ─── API ─────────────────────────────────────────────────────
 
 app.post('/api/party', (req, res) => {
-  const { hostName } = req.body
+  const { hostName, photo } = req.body
   if (!hostName) return res.status(400).json({ error: 'hostName required' })
   const code = generateCode()
   parties.set(code, {
     code, hostName,
-    players: [{ name: hostName, isHost: true }],
+    players: [{ name: hostName, isHost: true, photo: photo || null }],
     status: 'waiting',
     phase: 'lobby', // lobby | gameon | voting | vote_reveal | imposter_guessing | round_over
     createdAt: Date.now(),
@@ -175,11 +175,11 @@ app.post('/api/party/:code/join', (req, res) => {
   const party = parties.get(req.params.code.toUpperCase())
   if (!party) return res.status(404).json({ error: 'Party not found' })
   if (party.status !== 'waiting') return res.status(400).json({ error: 'Game already started' })
-  const { playerName } = req.body
+  const { playerName, photo } = req.body
   if (!playerName) return res.status(400).json({ error: 'playerName required' })
   const taken = party.players.some(p => p.name.toLowerCase() === playerName.toLowerCase())
   if (taken) return res.status(400).json({ error: 'Name already taken' })
-  party.players.push({ name: playerName, isHost: false })
+  party.players.push({ name: playerName, isHost: false, photo: photo || null })
   res.json({ code: party.code, players: party.players })
 })
 

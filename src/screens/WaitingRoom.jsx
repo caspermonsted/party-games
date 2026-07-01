@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
 import { getParty, kickPlayer } from '../api/party.js'
+import Avatar from '../components/Avatar.jsx'
 import styles from './WaitingRoom.module.css'
 
 function getJoinUrl(code) {
@@ -71,7 +72,7 @@ export default function WaitingRoom({ playerName, code, isHost, onGameStart, onB
           <div className={styles.playerList}>
             {players.map((p, i) => (
               <div key={i} className={styles.playerRow}>
-                <div className={styles.playerAvatar}>{p.name[0].toUpperCase()}</div>
+                <Avatar photo={p.photo} name={p.name} size="sm" />
                 <div className={styles.playerName}>
                   {p.name}
                   {p.isHost && <span className={styles.hostBadge}>Host</span>}
