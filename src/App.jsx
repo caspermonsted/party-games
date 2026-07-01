@@ -408,11 +408,11 @@ export default function App() {
     return (
       <Leaderboard
         scores={totalScores}
-        onPlayAgain={() => {
-          // Ny runde med samme spillere
-          setScreen(selectedMode === 'multi' ? 'categoryselect' : 'categoryselect')
-        }}
+        onPlayAgain={() => setScreen('categoryselect')}
         onEndGame={() => {
+          try {
+            localStorage.setItem('pg_last_party_scores', JSON.stringify({ scores: totalScores, savedAt: Date.now() }))
+          } catch {}
           clearScores()
           setTotalScores({})
           setScreen('lobby')

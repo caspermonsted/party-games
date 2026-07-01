@@ -4,6 +4,16 @@ import { useProfilePhoto } from '../hooks/useProfilePhoto.js'
 import Avatar from '../components/Avatar.jsx'
 import styles from './GameLobby.module.css'
 
+const MEDALS = ['🥇', '🥈', '🥉']
+
+function getLastPartyScores() {
+  try {
+    const raw = localStorage.getItem('pg_last_party_scores')
+    if (!raw) return null
+    return JSON.parse(raw)
+  } catch { return null }
+}
+
 export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
   const { t, lang, toggleLang } = useLang()
   const { photo, pickPhoto, removePhoto } = useProfilePhoto()
@@ -13,6 +23,7 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
   const fileInputRef = useRef(null)
   const availableGames = games.filter(g => g.status === 'available')
   const readyCount = availableGames.length
+  const lastParty = getLastPartyScores()
 
   function handleAvatarClick() {
     setShowPhotoMenu(true)
@@ -55,22 +66,46 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname }) {
           <span className={styles.countPill}>{readyCount} {t.ready}</span>
         </div>
 
-        {availableGames.map(game => (
-          <GameCard key={game.id} game={game} onPlay={() => onPlay(game)} t={t} />
-        ))}
+        {activeTab === 'home' && (
+          <>
+            {availableGames.map(game => (
+              <GameCard key={game.id} game={game} onPlay={() => onPlay(game)} t={t} />
+            ))}
+            <div className={styles.comingSoonRow}>
+              <div className={styles.comingSoonCard}>
+                <div className={styles.comingSoonIcon}>+</div>
+                <div className={styles.comingSoonTitle}>{t.moreSoon}</div>
+                <div className={styles.comingSoonSub}>{t.moreSoonSub}</div>
+              </div>
+              <div className={styles.comingSoonCard}>
+                <div className={styles.comingSoonIcon}>★</div>
+                <div className={styles.comingSoonTitle}>{t.voteNext}</div>
+                <div className={styles.comingSoonSub}>{t.voteNextSub}</div>
+              </div>
+            </div>
+          </>
+        )}
 
-        <div className={styles.comingSoonRow}>
-          <div className={styles.comingSoonCard}>
-            <div className={styles.comingSoonIcon}>+</div>
-            <div className={styles.comingSoonTitle}>{t.moreSoon}</div>
-            <div className={styles.comingSoonSub}>{t.moreSoonSub}</div>
+        {activeTab === 'leaderboard' && (
+          <div className={styles.leaderboardTab}>
+            <div className={styles.leaderboardTitle}>{t.partyLeaderboard}</div>
+            {lastParty ? (
+              <div className={styles.leaderboardList}>
+                {Object.entries(lastParty.scores)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([name, pts], i) => (
+                    <div key={name} className={`${styles.leaderboardRow} ${i === 0 ? styles.leaderboardRowFirst : ''}`}>
+                      <div className={styles.leaderboardMedal}>{MEDALS[i] || `#${i + 1}`}</div>
+                      <div className={styles.leaderboardName}>{name}</div>
+                      <div className={styles.leaderboardScore}>{pts} {t.pts}</div>
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <div className={styles.noScores}>{t.noPartyScores}</div>
+            )}
           </div>
-          <div className={styles.comingSoonCard}>
-            <div className={styles.comingSoonIcon}>★</div>
-            <div className={styles.comingSoonTitle}>{t.voteNext}</div>
-            <div className={styles.comingSoonSub}>{t.voteNextSub}</div>
-          </div>
-        </div>
+        )}
 
         <nav className={styles.bottomNav}>
           <button className={`${styles.navItem} ${activeTab === 'home' ? styles.navActive : ''}`} onClick={() => setActiveTab('home')}>◉</button>

@@ -4,7 +4,7 @@ import styles from './Leaderboard.module.css'
 
 const MEDALS = ['🥇', '🥈', '🥉']
 
-export default function Leaderboard({ scores, onPlayAgain, onEndGame }) {
+export default function Leaderboard({ scores, onPlayAgain = null, onEndGame }) {
   const { t } = useLang()
   const [visible, setVisible] = useState(false)
   useEffect(() => { setTimeout(() => setVisible(true), 100) }, [])
@@ -37,9 +37,11 @@ export default function Leaderboard({ scores, onPlayAgain, onEndGame }) {
           ))}
         </div>
 
-        <button className={styles.playAgainBtn} onClick={onPlayAgain}>
-          {t.playAgain} 🎉
-        </button>
+        {onPlayAgain && (
+          <button className={styles.playAgainBtn} onClick={onPlayAgain}>
+            {t.playAgain} 🎉
+          </button>
+        )}
         <button className={styles.endBtn} onClick={onEndGame}>
           {t.endGame}
         </button>

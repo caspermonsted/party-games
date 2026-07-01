@@ -162,6 +162,10 @@ export const translations = {
     leadingSub: (name) => `${name} is in the lead!`,
     playAgain: 'Play again',
     endGame: 'End game & go to lobby',
+    partyLeaderboard: 'Party Leaderboard',
+    noPartyScores: 'No scores yet — play a multiplayer game first!',
+    waitingNextRound: 'Waiting for host to start the next round...',
+    hostSettingUp: 'Host is picking categories',
 
     // Game on
     gameOn: 'GAME IS ON',
@@ -338,6 +342,10 @@ export const translations = {
     leadingSub: (name) => `${name} er i front!`,
     playAgain: 'Spil igen',
     endGame: 'Afslut spil & gå til lobby',
+    partyLeaderboard: 'Party Leaderboard',
+    noPartyScores: 'Ingen points endnu — spil et multiplayerspil først!',
+    waitingNextRound: 'Venter på at hosten starter næste runde...',
+    hostSettingUp: 'Hosten vælger kategorier',
 
     // Game on
     gameOn: 'SPILLET ER I GANG',

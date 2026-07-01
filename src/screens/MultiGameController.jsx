@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useLang } from '../lang/LanguageContext.jsx'
-import { getParty, submitVote } from '../api/party.js'
+import { getParty, submitVote, resetParty } from '../api/party.js'
 import GameOn from './GameOn.jsx'
+import MyWord from './MyWord.jsx'
 import { CastVoteMulti } from './CastVote.jsx'
 import VoteReveal from './VoteReveal.jsx'
 import ImposterGuess from './ImposterGuess.jsx'
@@ -18,12 +19,27 @@ export default function MultiGameController({
   const [party, setParty] = useState(null)
   const [voted, setVoted] = useState(false)
   const [showLeaderboard, setShowLeaderboard] = useState(false)
+  // Track the word the player has already acknowledged so we can show MyWord
+  // when a new round starts. Initialize to the word they saw before entering.
+  const acknowledgedWordRef = useRef(word?.word ?? null)
+  const [showInlineMyWord, setShowInlineMyWord] = useState(false)
   const pollRef = useRef(null)
 
   useEffect(() => {
     async function poll() {
       const fresh = await getParty(partyCode)
-      if (fresh) setParty(fresh)
+      if (!fresh) return
+      setParty(fresh)
+      // Detect new round: gameon with a word we haven't seen yet
+      if (
+        fresh.phase === 'gameon' &&
+        fresh.word?.word &&
+        fresh.word.word !== acknowledgedWordRef.current
+      ) {
+        setShowInlineMyWord(true)
+        setVoted(false)
+        setShowLeaderboard(false)
+      }
     }
     poll()
     pollRef.current = setInterval(poll, 2000)
@@ -64,10 +80,19 @@ export default function MultiGameController({
     setParty(prev => ({ ...prev, ...data, phase: 'round_over' }))
   }
 
-  // Loading
-  if (!party) {
-    return <WaitingScreen text="Loading..." />
+  async function handleHostPlayAgain() {
+    await resetParty(partyCode)
+    onPlayAgain()
   }
+
+  function handleEndGame(scores) {
+    try {
+      localStorage.setItem('pg_last_party_scores', JSON.stringify({ scores, savedAt: Date.now() }))
+    } catch {}
+    onEndGame()
+  }
+
+  if (!party) return <WaitingScreen text="Loading..." />
 
   const players = party.players?.map(p => p.name) || []
   const photoMap = Object.fromEntries((party.players || []).map(p => [p.name, p.photo || null]))
@@ -79,7 +104,27 @@ export default function MultiGameController({
   const roundPoints = party.roundPoints || {}
   const phase = party.phase || 'gameon'
 
-  // GAME ON — diskussion
+  // Lobby phase = host has reset, next round is being set up
+  if (phase === 'lobby') {
+    return <WaitingScreen text={isHost ? t.hostSettingUp : t.waitingNextRound} />
+  }
+
+  // Show MyWord inline when a new round starts (non-host path)
+  if (showInlineMyWord && gameWord) {
+    return (
+      <MyWord
+        playerName={playerName}
+        word={gameWord}
+        isImposter={isImposter}
+        onDone={() => {
+          acknowledgedWordRef.current = gameWord.word
+          setShowInlineMyWord(false)
+        }}
+      />
+    )
+  }
+
+  // GAME ON
   if (phase === 'gameon') {
     return (
       <GameOn
@@ -149,8 +194,8 @@ export default function MultiGameController({
       return (
         <Leaderboard
           scores={scores}
-          onPlayAgain={onPlayAgain}
-          onEndGame={onEndGame}
+          onPlayAgain={isHost ? handleHostPlayAgain : null}
+          onEndGame={() => handleEndGame(scores)}
         />
       )
     }
@@ -161,7 +206,7 @@ export default function MultiGameController({
         imposterName={imposterName}
         imposterCaught={party.imposterCaught || false}
         onContinue={() => setShowLeaderboard(true)}
-        onBack={onEndGame}
+        onBack={() => handleEndGame(scores)}
       />
     )
   }

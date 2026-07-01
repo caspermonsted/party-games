@@ -424,3 +424,63 @@
 .navActive {
   color: #fff;
 }
+
+/* Leaderboard tab */
+.leaderboardTab {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 8px;
+}
+
+.leaderboardTitle {
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.leaderboardList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leaderboardRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 14px 18px;
+}
+
+.leaderboardRowFirst {
+  background: rgba(251,191,36,0.18);
+  border: 1px solid rgba(251,191,36,0.35);
+}
+
+.leaderboardMedal {
+  font-size: 22px;
+  width: 30px;
+  text-align: center;
+}
+
+.leaderboardName {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.leaderboardScore {
+  font-size: 20px;
+  font-weight: 700;
+  color: #22d3ee;
+}
+
+.noScores {
+  font-size: 15px;
+  color: #c9b6e8;
+  text-align: center;
+  padding: 32px 0;
+}
