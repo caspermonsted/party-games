@@ -443,7 +443,7 @@ export default function App() {
         setScreen('modeselect')
       }}
       onChangeNickname={handleSetNickname}
-      onLeaveParty={partyCode ? () => { clearScores(); setScreen('joinorcreate') } : null}
+      onLeaveParty={() => { clearScores(); setScreen('joinorcreate') }}
     />
   )
 }

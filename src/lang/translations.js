@@ -169,6 +169,7 @@ export const translations = {
     noPartyScores: 'No scores yet — play a multiplayer game first!',
     waitingNextRound: 'Waiting for host to start the next round...',
     hostSettingUp: 'Host is picking categories',
+    resetScores: 'Reset scores',
 
     // Game on
     gameOn: 'GAME IS ON',
@@ -352,6 +353,7 @@ export const translations = {
     noPartyScores: 'Ingen points endnu — spil et multiplayerspil først!',
     waitingNextRound: 'Venter på at hosten starter næste runde...',
     hostSettingUp: 'Hosten vælger kategorier',
+    resetScores: 'Nulstil point',
 
     // Game on
     gameOn: 'SPILLET ER I GANG',

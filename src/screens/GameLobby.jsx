@@ -23,7 +23,7 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname, onLea
   const fileInputRef = useRef(null)
   const availableGames = games.filter(g => g.status === 'available')
   const readyCount = availableGames.length
-  const lastParty = getLastPartyScores()
+  const [lastParty, setLastParty] = useState(getLastPartyScores)
 
   function handleAvatarClick() {
     setShowPhotoMenu(true)
@@ -104,11 +104,17 @@ export default function GameLobby({ user, games, onPlay, onChangeNickname, onLea
             ) : (
               <div className={styles.noScores}>{t.noPartyScores}</div>
             )}
-            {onLeaveParty && (
-              <button className={styles.leavePartyBtn} onClick={onLeaveParty}>
-                🚪 {t.leaveParty}
+            {lastParty && (
+              <button className={styles.resetScoresBtn} onClick={() => {
+                localStorage.removeItem('pg_last_party_scores')
+                setLastParty(null)
+              }}>
+                🔄 {t.resetScores}
               </button>
             )}
+            <button className={styles.leavePartyBtn} onClick={onLeaveParty}>
+              🚪 {t.leaveParty}
+            </button>
           </div>
         )}
 
