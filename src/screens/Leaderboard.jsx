@@ -4,7 +4,7 @@ import styles from './Leaderboard.module.css'
 
 const MEDALS = ['🥇', '🥈', '🥉']
 
-export default function Leaderboard({ scores, onPlayAgain = null, onEndGame }) {
+export default function Leaderboard({ scores, onPlayAgain = null, onEndGame, onLeaveParty = null }) {
   const { t } = useLang()
   const [visible, setVisible] = useState(false)
   useEffect(() => { setTimeout(() => setVisible(true), 100) }, [])
@@ -45,6 +45,11 @@ export default function Leaderboard({ scores, onPlayAgain = null, onEndGame }) {
         <button className={styles.endBtn} onClick={onEndGame}>
           {t.endGame}
         </button>
+        {onLeaveParty && (
+          <button className={styles.leaveBtn} onClick={onLeaveParty}>
+            🚪 {t.leaveParty}
+          </button>
+        )}
       </div>
     </div>
   )

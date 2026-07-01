@@ -13,7 +13,7 @@ import styles from './MultiGameController.module.css'
 export default function MultiGameController({
   playerName, partyCode, isHost,
   word, imposterIndex, starterIndex,
-  onPlayAgain, onEndGame,
+  onPlayAgain, onEndGame, onLeaveParty,
 }) {
   const { t } = useLang()
   const [party, setParty] = useState(null)
@@ -196,6 +196,7 @@ export default function MultiGameController({
           scores={scores}
           onPlayAgain={isHost ? handleHostPlayAgain : null}
           onEndGame={() => handleEndGame(scores)}
+          onLeaveParty={() => { handleEndGame(scores); onLeaveParty?.() }}
         />
       )
     }

@@ -306,6 +306,7 @@ export default function App() {
         initialParty={{ players: players.map(n => ({ name: n, isHost: n === players[0] })), word: gameWord, imposterIndex, starterIndex, phase: 'gameon', votes: {}, scores: {}, roundPoints: {} }}
         onPlayAgain={() => setScreen('categoryselect')}
         onEndGame={() => { clearScores(); setScreen('lobby') }}
+        onLeaveParty={() => { clearScores(); setScreen('joinorcreate') }}
       />
     )
   }
