@@ -125,6 +125,9 @@ export const translations = {
     myImposterTitle: 'You are the\nIMPOSTER!',
     myBlendIn: "Blend in — don't get caught!",
     myReady: "I'm ready 👊",
+    tapToReveal: 'Tap to see your word',
+    tapToRevealSub: 'Make sure no one else is looking!',
+    showMyWord: 'Show my word 👁️',
 
     // Voting
     voteTitle: 'Who is the imposter?',
@@ -305,6 +308,9 @@ export const translations = {
     myImposterTitle: 'Du er\nIMPOSTEREN!',
     myBlendIn: 'Blend ind — bliv ikke afsløret!',
     myReady: 'Jeg er klar 👊',
+    tapToReveal: 'Tryk for at se dit ord',
+    tapToRevealSub: 'Sørg for at ingen kigger over din skulder!',
+    showMyWord: 'Vis mit ord 👁️',
 
     // Voting
     voteTitle: 'Hvem er imposteren?',

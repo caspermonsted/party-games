@@ -168,3 +168,43 @@
 }
 .backBtn:hover { background: rgba(255,255,255,0.24); }
 .backBtn:active { background: rgba(255,255,255,0.32); }
+
+/* Tap-to-reveal fase */
+.lockIcon {
+  font-size: 72px;
+  margin-top: 16px;
+}
+
+.tapTitle {
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+}
+
+.tapSub {
+  font-size: 15px;
+  color: #e9d5ff;
+  text-align: center;
+  margin: 0;
+}
+
+.revealBtn {
+  width: 100%;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a0b2e;
+  background: #22d3ee;
+  border: none;
+  border-radius: 18px;
+  padding: 17px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -6px rgba(34,211,238,0.5);
+  margin-top: 12px;
+  transition: transform 120ms ease-out;
+}
+
+.revealBtn:active {
+  transform: scale(0.97);
+}
